@@ -16,7 +16,7 @@ export const teesProducts: TeeProduct[] = [
     rating: 4.7,
     reviewCount: 122,
     images: [
-      "public/lovable-uploads/cef185b6-a8ec-41e0-8dd2-d202755fe016.png",
+      "/lovable-uploads/cef185b6-a8ec-41e0-8dd2-d202755fe016.png",
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
     ],
     variants: [
