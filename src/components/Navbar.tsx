@@ -59,14 +59,20 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <Link to="/" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
               Home
             </Link>
-            <Link to="/products" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
-              Products
+            <Link to="/mens" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              Mens
             </Link>
-            <Link to="/collections" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
-              Collections
+            <Link to="/womens" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              Womens
             </Link>
-            <Link to="/about" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
-              About
+            <Link to="/kids" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              Kids
+            </Link>
+            <Link to="/drops" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              Drops
+            </Link>
+            <Link to="/vips" className="text-sm font-medium text-gray-700 hover:text-black transition-colors">
+              VIPs
             </Link>
           </nav>
           
@@ -119,25 +125,39 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               Home
             </Link>
             <Link 
-              to="/products" 
+              to="/mens" 
               className="py-2 text-lg font-medium border-b border-gray-100"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Products
+              Mens
             </Link>
             <Link 
-              to="/collections" 
+              to="/womens" 
               className="py-2 text-lg font-medium border-b border-gray-100"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Collections
+              Womens
             </Link>
             <Link 
-              to="/about" 
+              to="/kids" 
               className="py-2 text-lg font-medium border-b border-gray-100"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              About
+              Kids
+            </Link>
+            <Link 
+              to="/drops" 
+              className="py-2 text-lg font-medium border-b border-gray-100"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Drops
+            </Link>
+            <Link 
+              to="/vips" 
+              className="py-2 text-lg font-medium border-b border-gray-100"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              VIPs
             </Link>
           </nav>
         </div>
