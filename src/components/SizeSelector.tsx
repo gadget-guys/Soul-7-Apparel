@@ -18,7 +18,7 @@ const SizeSelector = ({
       <div className="flex items-center justify-between">
         <div className="text-sm font-medium">Size</div>
         {sizes.length > 0 && selectedSize && (
-          <div className="text-sm text-gray-500">
+          <div className="text-sm font-medium bg-muted px-2 py-0.5 rounded-full text-black">
             {selectedSize.size}
           </div>
         )}
@@ -34,7 +34,7 @@ const SizeSelector = ({
               className={cn(
                 "relative py-2 px-3 rounded border text-sm font-medium transition-all duration-200",
                 isSelected 
-                  ? "border-primary bg-primary/5 text-primary" 
+                  ? "border-primary bg-primary/10 text-primary" 
                   : "border-gray-200 hover:border-gray-300",
                 !sizeOption.inStock && "opacity-40 cursor-not-allowed"
               )}
