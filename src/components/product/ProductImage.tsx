@@ -1,8 +1,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { FadeIn } from './ui/transitions';
+import { FadeIn } from '@/components/ui/transitions';
 import { cn } from '@/lib/utils';
+import ImageThumbnail from './ImageThumbnail';
 
 interface ProductImageProps {
   images: string[];
@@ -16,7 +17,6 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const imageRef = useRef<HTMLDivElement>(null);
 
-  // Preload images and track loading status
   useEffect(() => {
     const loadImages = async () => {
       const loadStatuses = images.map(() => false);
@@ -120,61 +120,59 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
           <ZoomIn size={18} className="text-gray-700" />
         </div>
         
-        {/* Navigation Arrows */}
-        <button
-          onClick={(e) => {
+        <ImageNavigationControls 
+          onPrevClick={(e) => {
             e.stopPropagation();
             goToPrevSlide();
           }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm opacity-70 hover:opacity-100 transition-opacity z-10"
-          aria-label="Previous image"
-        >
-          <ChevronLeft size={20} className="text-gray-700" />
-        </button>
-        
-        <button
-          onClick={(e) => {
+          onNextClick={(e) => {
             e.stopPropagation();
             goToNextSlide();
           }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm opacity-70 hover:opacity-100 transition-opacity z-10"
-          aria-label="Next image"
-        >
-          <ChevronRight size={20} className="text-gray-700" />
-        </button>
+        />
       </div>
       
       {/* Thumbnails */}
       <div className="mt-4 grid grid-cols-4 gap-2">
         {images.map((image, index) => (
           <FadeIn key={index} delay={100 + index * 50}>
-            <button 
+            <ImageThumbnail 
+              image={image}
+              index={index}
+              isSelected={currentIndex === index}
+              isLoaded={imagesLoaded[index]}
               onClick={() => handleThumbnailClick(index)}
-              className={cn(
-                "relative rounded overflow-hidden aspect-square transition-all duration-200",
-                currentIndex === index 
-                  ? "ring-2 ring-primary ring-offset-2" 
-                  : "hover:opacity-80 opacity-60"
-              )}
-              aria-label={`View image ${index + 1}`}
-            >
-              <img 
-                src={image} 
-                alt={`Thumbnail ${index + 1}`} 
-                className={cn(
-                  "w-full h-full object-cover transition-opacity duration-500",
-                  imagesLoaded[index] ? "opacity-100" : "opacity-0"
-                )}
-              />
-              {!imagesLoaded[index] && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
-              )}
-            </button>
+            />
           </FadeIn>
         ))}
       </div>
     </div>
   );
 };
+
+interface ImageNavigationControlsProps {
+  onPrevClick: (e: React.MouseEvent) => void;
+  onNextClick: (e: React.MouseEvent) => void;
+}
+
+const ImageNavigationControls = ({ onPrevClick, onNextClick }: ImageNavigationControlsProps) => (
+  <>
+    <button
+      onClick={onPrevClick}
+      className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm opacity-70 hover:opacity-100 transition-opacity z-10"
+      aria-label="Previous image"
+    >
+      <ChevronLeft size={20} className="text-gray-700" />
+    </button>
+    
+    <button
+      onClick={onNextClick}
+      className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm opacity-70 hover:opacity-100 transition-opacity z-10"
+      aria-label="Next image"
+    >
+      <ChevronRight size={20} className="text-gray-700" />
+    </button>
+  </>
+);
 
 export default ProductImage;

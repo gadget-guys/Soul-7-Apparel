@@ -1,9 +1,9 @@
 
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ProductCard from './ProductCard';
-import { FadeIn } from './ui/transitions';
+import { FadeIn } from '@/components/ui/transitions';
 import { Product } from '@/lib/product-data';
+import ProductCard from './ProductCard';
 
 interface RelatedProductsProps {
   products: Product[];
@@ -45,24 +45,12 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
           </FadeIn>
           
           <FadeIn delay={100}>
-            <div className="flex space-x-2">
-              <button
-                onClick={scrollLeft}
-                disabled={scrollPosition <= 0}
-                className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Scroll left"
-              >
-                <ChevronLeft size={20} className="text-gray-300" />
-              </button>
-              <button
-                onClick={scrollRight}
-                disabled={scrollPosition >= maxScroll}
-                className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Scroll right"
-              >
-                <ChevronRight size={20} className="text-gray-300" />
-              </button>
-            </div>
+            <NavigationControls 
+              onScrollLeft={scrollLeft}
+              onScrollRight={scrollRight}
+              canScrollLeft={scrollPosition > 0}
+              canScrollRight={scrollPosition < maxScroll}
+            />
           </FadeIn>
         </div>
         
@@ -84,5 +72,38 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
     </section>
   );
 };
+
+interface NavigationControlsProps {
+  onScrollLeft: () => void;
+  onScrollRight: () => void;
+  canScrollLeft: boolean;
+  canScrollRight: boolean;
+}
+
+const NavigationControls = ({ 
+  onScrollLeft, 
+  onScrollRight, 
+  canScrollLeft, 
+  canScrollRight 
+}: NavigationControlsProps) => (
+  <div className="flex space-x-2">
+    <button
+      onClick={onScrollLeft}
+      disabled={!canScrollLeft}
+      className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      aria-label="Scroll left"
+    >
+      <ChevronLeft size={20} className="text-gray-300" />
+    </button>
+    <button
+      onClick={onScrollRight}
+      disabled={!canScrollRight}
+      className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      aria-label="Scroll right"
+    >
+      <ChevronRight size={20} className="text-gray-300" />
+    </button>
+  </div>
+);
 
 export default RelatedProducts;
