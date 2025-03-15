@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ShoppingCart, Menu, X, Search } from 'lucide-react';
@@ -72,7 +71,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black">Mens</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Mens</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                     <li className="row-span-3">
@@ -81,7 +80,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
                           to="/mens"
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         >
-                          <div className="mb-2 mt-4 text-lg font-medium">
+                          <div className="mb-2 mt-4 text-lg font-medium font-playfair">
                             Mens Collection
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
@@ -127,7 +126,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black">Womens</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Womens</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                     <li className="row-span-3">
@@ -136,7 +135,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
                           to="/womens"
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         >
-                          <div className="mb-2 mt-4 text-lg font-medium">
+                          <div className="mb-2 mt-4 text-lg font-medium font-playfair">
                             Womens Collection
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
@@ -182,7 +181,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black">Kids</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Kids</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                     <li className="row-span-3">
@@ -191,7 +190,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
                           to="/kids"
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         >
-                          <div className="mb-2 mt-4 text-lg font-medium">
+                          <div className="mb-2 mt-4 text-lg font-medium font-playfair">
                             Kids Collection
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
@@ -237,7 +236,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black">Drops</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Drops</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px]">
                     <li className="row-span-3">
@@ -246,7 +245,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
                           to="/drops"
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         >
-                          <div className="mb-2 mt-4 text-lg font-medium">
+                          <div className="mb-2 mt-4 text-lg font-medium font-playfair">
                             Latest Drops
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
@@ -284,7 +283,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/vips" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors">
+                <Link to="/vips" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors font-playfair">
                   VIPs
                 </Link>
               </NavigationMenuItem>
@@ -344,7 +343,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <div className="py-2 border-b border-gray-100 space-y-2">
               <Link 
                 to="/mens" 
-                className="block text-lg font-medium"
+                className="block text-lg font-medium font-playfair"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Mens
@@ -385,7 +384,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <div className="py-2 border-b border-gray-100 space-y-2">
               <Link 
                 to="/womens" 
-                className="block text-lg font-medium"
+                className="block text-lg font-medium font-playfair"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Womens
@@ -426,7 +425,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <div className="py-2 border-b border-gray-100 space-y-2">
               <Link 
                 to="/kids" 
-                className="block text-lg font-medium"
+                className="block text-lg font-medium font-playfair"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Kids
@@ -467,7 +466,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             <div className="py-2 border-b border-gray-100 space-y-2">
               <Link 
                 to="/drops" 
-                className="block text-lg font-medium"
+                className="block text-lg font-medium font-playfair"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Drops
@@ -499,7 +498,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             
             <Link 
               to="/vips" 
-              className="py-2 text-lg font-medium border-b border-gray-100"
+              className="py-2 text-lg font-medium border-b border-gray-100 font-playfair"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               VIPs
@@ -512,3 +511,4 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
 };
 
 export default Navbar;
+
