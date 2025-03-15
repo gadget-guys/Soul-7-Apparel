@@ -41,7 +41,7 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
       <div className="container">
         <div className="flex justify-between items-center mb-6">
           <FadeIn>
-            <h2 className="text-2xl font-medium">You May Also Like</h2>
+            <h2 className="text-2xl font-medium font-playfair text-primary">You May Also Like</h2>
           </FadeIn>
           
           <FadeIn delay={100}>
@@ -49,18 +49,18 @@ const RelatedProducts = ({ products }: RelatedProductsProps) => {
               <button
                 onClick={scrollLeft}
                 disabled={scrollPosition <= 0}
-                className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Scroll left"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={20} className="text-gray-300" />
               </button>
               <button
                 onClick={scrollRight}
                 disabled={scrollPosition >= maxScroll}
-                className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-full border border-gray-700 hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Scroll right"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={20} className="text-gray-300" />
               </button>
             </div>
           </FadeIn>

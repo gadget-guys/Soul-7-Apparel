@@ -25,7 +25,7 @@ const Index = () => {
       <div className="fixed inset-0 flex items-center justify-center bg-black">
         <div className="flex flex-col items-center">
           <div className="w-16 h-16 border-4 border-gray-800 border-t-primary rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-300">Loading product...</p>
+          <p className="mt-4 text-gray-300 font-playfair">Loading product...</p>
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-medium mb-4 text-white">AUDIOPHILE</h3>
+              <h3 className="font-medium mb-4 text-white font-playfair">AUDIOPHILE</h3>
               <p className="text-sm text-gray-400 mb-4">
                 Premium audio products for the discerning listener. Experience sound as it was meant to be heard.
               </p>
@@ -92,7 +92,7 @@ const Index = () => {
             </div>
             
             <div>
-              <h4 className="font-medium mb-4 text-sm text-white">Shop</h4>
+              <h4 className="font-medium mb-4 text-sm text-white font-playfair">Shop</h4>
               <ul className="space-y-2 text-sm">
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">Headphones</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">Speakers</a></li>
@@ -102,7 +102,7 @@ const Index = () => {
             </div>
             
             <div>
-              <h4 className="font-medium mb-4 text-sm text-white">Support</h4>
+              <h4 className="font-medium mb-4 text-sm text-white font-playfair">Support</h4>
               <ul className="space-y-2 text-sm">
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">Contact Us</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">FAQ</a></li>
@@ -112,7 +112,7 @@ const Index = () => {
             </div>
             
             <div>
-              <h4 className="font-medium mb-4 text-sm text-white">Company</h4>
+              <h4 className="font-medium mb-4 text-sm text-white font-playfair">Company</h4>
               <ul className="space-y-2 text-sm">
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">About Us</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-gray-300">Sustainability</a></li>

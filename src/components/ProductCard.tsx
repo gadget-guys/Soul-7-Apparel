@@ -95,7 +95,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             </span>
           </div>
           
-          <h3 className="font-medium text-gray-100 group-hover:text-primary transition-colors">
+          <h3 className="font-medium text-gray-100 group-hover:text-primary transition-colors font-playfair">
             {product.name}
           </h3>
           

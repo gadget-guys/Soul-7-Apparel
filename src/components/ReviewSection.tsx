@@ -34,7 +34,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
   return (
     <section className="py-12">
       <FadeIn>
-        <h2 className="text-2xl font-medium mb-8">Customer Reviews</h2>
+        <h2 className="text-2xl font-medium mb-8 font-playfair text-yellow-400">Customer Reviews</h2>
       </FadeIn>
       
       <div className="grid md:grid-cols-[300px_1fr] gap-10">
@@ -42,7 +42,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
         <FadeIn delay={100}>
           <div className="space-y-6">
             <div className="text-center">
-              <div className="text-5xl font-medium mb-2">{totalRating.toFixed(1)}</div>
+              <div className="text-5xl font-medium mb-2 font-playfair">{totalRating.toFixed(1)}</div>
               <div className="flex justify-center mb-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star 
@@ -113,7 +113,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
           {filteredReviews.length === 0 ? (
             <FadeIn>
               <div className="text-center py-10">
-                <div className="text-lg font-medium mb-2">No reviews with this rating</div>
+                <div className="text-lg font-medium font-playfair mb-2">No reviews with this rating</div>
                 <p className="text-gray-400">Try selecting a different rating or view all reviews.</p>
               </div>
             </FadeIn>
@@ -149,7 +149,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
                     </div>
                   </div>
                   
-                  <h3 className="font-medium mb-2">{review.title}</h3>
+                  <h3 className="font-medium font-playfair mb-2">{review.title}</h3>
                   <p className="text-gray-300 mb-3">{review.content}</p>
                   
                   <button className="flex items-center text-sm text-gray-400 hover:text-gray-300">
