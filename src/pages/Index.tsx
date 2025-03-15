@@ -8,6 +8,12 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import { FadeIn } from '@/components/ui/transitions';
 import { featuredProduct, relatedProducts } from '@/lib/product-data';
 import Footer from '@/components/layout/Footer';
+import ProductRecommendations from '@/components/ai/ProductRecommendations';
+import VisualSearch from '@/components/ai/VisualSearch';
+import SizeRecommendation from '@/components/ai/SizeRecommendation';
+import DynamicPricing from '@/components/ai/DynamicPricing';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles } from 'lucide-react';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -46,8 +52,44 @@ const Index = () => {
                 productName={featuredProduct.name} 
               />
               
-              <ProductInfo product={featuredProduct} />
+              <div className="space-y-6">
+                <ProductInfo product={featuredProduct} />
+                <DynamicPricing 
+                  productId={featuredProduct.id} 
+                  initialPrice={featuredProduct.price} 
+                />
+              </div>
             </div>
+          </div>
+        </section>
+        
+        {/* AI Features Section */}
+        <section className="py-10 bg-gray-950">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="flex items-center gap-2 mb-8">
+              <Sparkles size={24} className="text-primary" />
+              <h2 className="text-2xl font-playfair">AI-Powered Shopping</h2>
+            </div>
+            
+            <Tabs defaultValue="recommendations">
+              <TabsList className="mb-6">
+                <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                <TabsTrigger value="visual-search">Visual Search</TabsTrigger>
+                <TabsTrigger value="size-finder">Size Finder</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="recommendations">
+                <ProductRecommendations currentProductId={featuredProduct.id} />
+              </TabsContent>
+              
+              <TabsContent value="visual-search">
+                <VisualSearch />
+              </TabsContent>
+              
+              <TabsContent value="size-finder">
+                <SizeRecommendation />
+              </TabsContent>
+            </Tabs>
           </div>
         </section>
         

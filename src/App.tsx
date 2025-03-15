@@ -8,6 +8,10 @@ import Index from "./pages/Index";
 import Tees from "./pages/Tees";
 import TeeDetail from "./pages/TeeDetail";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import AccountPage from "./pages/account/AccountPage";
+import ShopAssistant from "./components/ai/ShopAssistant";
 
 const queryClient = new QueryClient();
 
@@ -24,9 +28,13 @@ const App = () => (
           <Route path="/womens/tees" element={<Tees />} />
           <Route path="/kids/tees" element={<Tees />} />
           <Route path="/tee/:id" element={<TeeDetail />} />
+          <Route path="/account/login" element={<Login />} />
+          <Route path="/account/register" element={<Register />} />
+          <Route path="/account" element={<AccountPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ShopAssistant />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ShoppingCart, Menu, X, Search } from 'lucide-react';
+import { ChevronLeft, ShoppingCart, Menu, X, Search, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MobileMenu from './MobileMenu';
 import NavigationItems from './NavigationItems';
+import { Button } from '../ui/button';
 
 interface NavbarProps {
   transparent?: boolean;
@@ -75,6 +76,17 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
                 0
               </span>
             </button>
+
+            {/* Account Button */}
+            <Link to="/account/login">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:text-gray-300 transition-colors p-0"
+                aria-label="Account"
+              >
+                <UserCircle size={22} />
+              </Button>
+            </Link>
             
             {/* Mobile Menu Button */}
             <button 
