@@ -4,7 +4,7 @@ import { Star, ShoppingCart, Heart, Truck, RotateCcw, Check } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { FadeIn, SlideIn, ScaleIn } from '@/components/ui/transitions';
 import ColorSelector from '@/components/ColorSelector';
-import SizeSelector from '@/components/SizeSelector';
+import SizeSelector from '@/components/product/SizeSelector'; // Updated import path
 import { cn } from '@/lib/utils';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 
