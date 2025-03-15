@@ -39,9 +39,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
       <header 
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out",
-          isScrolled || !transparent 
-            ? "bg-white/90 backdrop-blur-md shadow-sm" 
-            : "bg-transparent"
+          isScrolled ? "bg-black text-white shadow-sm" : "bg-black text-white"
         )}
       >
         <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -49,14 +47,14 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
           <div className="flex items-center">
             <Link 
               to="/" 
-              className="mr-4 text-gray-700 hover:text-black transition-colors"
+              className="mr-4 text-white hover:text-gray-300 transition-colors"
               aria-label="Go back"
             >
               <ChevronLeft size={20} />
             </Link>
             
             {/* Logo */}
-            <Link to="/" className="text-xl font-medium tracking-tight">
+            <Link to="/" className="text-xl font-medium tracking-tight text-white">
               AUDIOPHILE
             </Link>
           </div>
@@ -65,15 +63,15 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link to="/" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors">
+                <Link to="/" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white hover:text-gray-300 transition-colors">
                   Home
                 </Link>
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Mens</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-white hover:text-gray-300 font-playfair bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">Mens</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-black">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -126,9 +124,9 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Womens</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-white hover:text-gray-300 font-playfair bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">Womens</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-black">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -181,9 +179,9 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Kids</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-white hover:text-gray-300 font-playfair bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">Kids</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] bg-black">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -236,9 +234,9 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-medium text-gray-700 hover:text-black font-playfair">Drops</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm font-medium text-white hover:text-gray-300 font-playfair bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">Drops</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px]">
+                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] bg-black">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -283,7 +281,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/vips" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-black transition-colors font-playfair">
+                <Link to="/vips" className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white hover:text-gray-300 transition-colors font-playfair">
                   VIPs
                 </Link>
               </NavigationMenuItem>
@@ -293,25 +291,25 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
           {/* Right Section */}
           <div className="flex items-center space-x-4">
             <button 
-              className="text-gray-700 hover:text-black transition-colors"
+              className="text-white hover:text-gray-300 transition-colors"
               aria-label="Search"
             >
               <Search size={20} />
             </button>
             
             <button 
-              className="text-gray-700 hover:text-black transition-colors relative"
+              className="text-white hover:text-gray-300 transition-colors relative"
               aria-label="Cart"
             >
               <ShoppingCart size={20} />
-              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-orange text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 0
               </span>
             </button>
             
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden text-gray-700 hover:text-black transition-colors"
+              className="md:hidden text-white hover:text-gray-300 transition-colors"
               onClick={toggleMobileMenu}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -324,7 +322,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
       {/* Mobile Menu */}
       <div 
         className={cn(
-          "fixed inset-0 z-40 bg-white transform transition-transform duration-300 ease-in-out",
+          "fixed inset-0 z-40 bg-black text-white transform transition-transform duration-300 ease-in-out",
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         )}
         style={{ paddingTop: "4rem" }}
@@ -333,14 +331,14 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
           <nav className="flex flex-col space-y-4">
             <Link 
               to="/" 
-              className="py-2 text-lg font-medium border-b border-gray-100"
+              className="py-2 text-lg font-medium border-b border-gray-800"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
             </Link>
             
             {/* Mens Mobile Navigation */}
-            <div className="py-2 border-b border-gray-100 space-y-2">
+            <div className="py-2 border-b border-gray-800 space-y-2">
               <Link 
                 to="/mens" 
                 className="block text-lg font-medium font-playfair"
@@ -381,7 +379,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             </div>
             
             {/* Womens Mobile Navigation */}
-            <div className="py-2 border-b border-gray-100 space-y-2">
+            <div className="py-2 border-b border-gray-800 space-y-2">
               <Link 
                 to="/womens" 
                 className="block text-lg font-medium font-playfair"
@@ -422,7 +420,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             </div>
             
             {/* Kids Mobile Navigation */}
-            <div className="py-2 border-b border-gray-100 space-y-2">
+            <div className="py-2 border-b border-gray-800 space-y-2">
               <Link 
                 to="/kids" 
                 className="block text-lg font-medium font-playfair"
@@ -463,7 +461,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             </div>
             
             {/* Drops Mobile Navigation */}
-            <div className="py-2 border-b border-gray-100 space-y-2">
+            <div className="py-2 border-b border-gray-800 space-y-2">
               <Link 
                 to="/drops" 
                 className="block text-lg font-medium font-playfair"
@@ -498,7 +496,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             
             <Link 
               to="/vips" 
-              className="py-2 text-lg font-medium border-b border-gray-100 font-playfair"
+              className="py-2 text-lg font-medium border-b border-gray-800 font-playfair"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               VIPs
@@ -511,4 +509,3 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
 };
 
 export default Navbar;
-
