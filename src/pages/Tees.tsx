@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Navbar from '@/components/navbar';
 import { FadeIn } from '@/components/ui/transitions';
 import TeeCard from '@/components/product/TeeCard';
@@ -10,6 +10,7 @@ import { isSupabaseConfigured } from '@/lib/supabase';
 
 const Tees = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     // Simulate loading state
@@ -17,8 +18,11 @@ const Tees = () => {
       setIsLoading(false);
     }, 500);
 
+    console.log('Tees component mounted, path:', location.pathname);
+    console.log('Tees data available:', teesProducts.length);
+
     return () => clearTimeout(timer);
-  }, []);
+  }, [location]);
 
   // Check if Supabase is configured
   const supabaseReady = isSupabaseConfigured();

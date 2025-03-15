@@ -42,6 +42,11 @@ const TeeCard = ({ product, index = 0 }: TeeCardProps) => {
     });
   };
 
+  // Safely get the first image URL
+  const imageUrl = product.images && product.images.length > 0 
+    ? product.images[0] 
+    : 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
+
   return (
     <div
       className="group animate-fade-in"
@@ -57,11 +62,11 @@ const TeeCard = ({ product, index = 0 }: TeeCardProps) => {
               "absolute inset-0 bg-cover bg-center transition-transform duration-700",
               isHovered && "scale-105"
             )}
-            style={{ backgroundImage: `url(${product.images[0]})` }}
+            style={{ backgroundImage: `url(${imageUrl})` }}
           />
           
           <img 
-            src={product.images[0]} 
+            src={imageUrl} 
             alt={product.name}
             className={cn(
               "w-full h-full object-cover transition-opacity duration-500",

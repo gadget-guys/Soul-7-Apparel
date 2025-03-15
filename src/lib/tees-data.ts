@@ -56,6 +56,7 @@ export const teesProducts: TeeProduct[] = [
       "FIT": "REGULAR",
       "ORIGIN": "ITALY"
     },
+    new: true,
     reviews: [
       {
         id: "review-001",
@@ -121,6 +122,7 @@ export const teesProducts: TeeProduct[] = [
       "Care": "Machine wash cold, tumble dry low",
       "Origin": "Made in Portugal"
     },
+    isExclusive: true,
     reviews: []
   },
   {
