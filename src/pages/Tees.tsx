@@ -6,6 +6,7 @@ import { FadeIn } from '@/components/ui/transitions';
 import TeeCard from '@/components/product/TeeCard';
 import { teesProducts } from '@/lib/tees-data';
 import Footer from '@/components/layout/Footer';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 const Tees = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,9 @@ const Tees = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Check if Supabase is configured
+  const supabaseReady = isSupabaseConfigured();
 
   if (isLoading) {
     return (
@@ -34,13 +38,19 @@ const Tees = () => {
     <div className="min-h-screen">
       <Navbar transparent={true} />
       
+      {!supabaseReady && (
+        <div className="bg-amber-600 text-white px-4 py-2 text-center">
+          <p>Supabase is not configured. Some features may not work properly.</p>
+        </div>
+      )}
+      
       <main className="pt-20">
         <div className="container mx-auto px-4 sm:px-6">
           {/* Hero Section */}
           <section className="relative h-80 md:h-96 overflow-hidden mb-12">
             <div className="absolute inset-0 z-0">
               <img 
-                src="public/lovable-uploads/e50416c5-cb3d-4d08-a15a-f8283eedbd6b.png" 
+                src="/lovable-uploads/e50416c5-cb3d-4d08-a15a-f8283eedbd6b.png" 
                 alt="T-shirts Collection" 
                 className="w-full h-full object-cover"
               />
