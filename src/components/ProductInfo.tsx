@@ -1,11 +1,14 @@
 
 import { useState } from 'react';
-import { Star, ShoppingCart, Heart, Truck, RotateCcw, Check } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FadeIn, SlideIn, ScaleIn } from '@/components/ui/transitions';
 import ColorSelector from '@/components/ColorSelector';
-import SizeSelector from '@/components/product/SizeSelector'; // Updated import path
-import { cn } from '@/lib/utils';
+import SizeSelector from '@/components/product/SizeSelector';
+import ProductTabs from '@/components/product/ProductTabs';
+import QuantitySelector from '@/components/product/QuantitySelector';
+import AddToCartButton from '@/components/product/AddToCartButton';
+import ShippingInfo from '@/components/product/ShippingInfo';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 
 interface ProductInfoProps {
@@ -18,26 +21,15 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     product.variants[0]?.sizes[0] || null
   );
   const [quantity, setQuantity] = useState(1);
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'features' | 'details'>('description');
   
   const handleAddToCart = () => {
-    setIsAddedToCart(true);
-    
-    // Reset the added to cart state after animation completes
-    setTimeout(() => {
-      setIsAddedToCart(false);
-    }, 1000);
-  };
-  
-  const incrementQuantity = () => {
-    setQuantity(prev => prev + 1);
-  };
-  
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(prev => prev - 1);
-    }
+    // Add to cart logic would go here
+    console.log('Added to cart:', {
+      product: product.name,
+      variant: selectedVariant.color,
+      size: selectedSize?.size,
+      quantity
+    });
   };
   
   const handleSelectVariant = (variant: ProductVariant) => {
@@ -85,15 +77,18 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star 
-                  key={i} 
-                  size={16} 
-                  className={cn(
-                    "text-yellow-400",
-                    i >= Math.round(product.rating) && "text-gray-600"
-                  )} 
+                <svg
+                  key={i}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
                   fill={i < Math.round(product.rating) ? "currentColor" : "none"}
-                />
+                  stroke="currentColor"
+                  className={i < Math.round(product.rating) ? "text-yellow-400" : "text-gray-600"}
+                  width="16"
+                  height="16"
+                >
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
               ))}
               <span className="ml-2 text-sm text-gray-400">
                 {product.rating} ({product.reviewCount} reviews)
@@ -121,60 +116,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       
       <div className="space-y-6 pt-2">
         <FadeIn delay={400}>
-          {/* Tabs for product information */}
-          <div className="border-b border-gray-800">
-            <div className="flex space-x-8">
-              {[
-                { id: 'description', label: 'Description' },
-                { id: 'features', label: 'Features' },
-                { id: 'details', label: 'Details' },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  className={cn(
-                    "py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
-                    activeTab === tab.id 
-                      ? "border-primary text-primary" 
-                      : "border-transparent text-gray-400 hover:text-gray-300"
-                  )}
-                  onClick={() => setActiveTab(tab.id as any)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Tab content */}
-          <div className="py-2 min-h-[120px]">
-            {activeTab === 'description' && (
-              <p className="text-gray-300 leading-relaxed">
-                {product.description}
-              </p>
-            )}
-            
-            {activeTab === 'features' && (
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-start">
-                    <Check size={18} className="text-primary shrink-0 mt-0.5 mr-2" />
-                    <span className="text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            
-            {activeTab === 'details' && (
-              <div className="space-y-2">
-                {Object.entries(product.details).map(([key, value]) => (
-                  <div key={key} className="grid grid-cols-3 text-sm">
-                    <div className="font-medium text-gray-400">{key}</div>
-                    <div className="col-span-2 text-gray-300">{value}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductTabs product={product} />
         </FadeIn>
         
         <SlideIn delay={500}>
@@ -195,37 +137,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         
         <ScaleIn delay={700}>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center border border-gray-700 rounded-md">
-              <button 
-                onClick={decrementQuantity}
-                disabled={quantity <= 1}
-                className="px-3 py-2 text-gray-400 hover:text-gray-300 disabled:opacity-50"
-                aria-label="Decrease quantity"
-              >
-                -
-              </button>
-              <div className="w-10 text-center py-2 font-medium text-sm">
-                {quantity}
-              </div>
-              <button 
-                onClick={incrementQuantity}
-                className="px-3 py-2 text-gray-400 hover:text-gray-300"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
+            <QuantitySelector 
+              initialQuantity={quantity} 
+              onChange={setQuantity} 
+            />
             
-            <Button 
-              onClick={handleAddToCart}
-              className={cn(
-                "flex-1 flex items-center justify-center space-x-2 h-11",
-                isAddedToCart && "add-to-cart-animation"
-              )}
-            >
-              <ShoppingCart size={18} />
-              <span>{isAddedToCart ? "Added to Cart!" : "Add to Cart"}</span>
-            </Button>
+            <AddToCartButton onClick={handleAddToCart} />
             
             <Button 
               variant="outline" 
@@ -239,16 +156,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </ScaleIn>
         
         <FadeIn delay={800}>
-          <div className="space-y-3 pt-2">
-            <div className="flex items-center text-sm text-gray-300">
-              <Truck size={18} className="mr-2 text-gray-500" />
-              <span>Free delivery on orders over $50</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-300">
-              <RotateCcw size={18} className="mr-2 text-gray-500" />
-              <span>30-day free returns</span>
-            </div>
-          </div>
+          <ShippingInfo />
         </FadeIn>
       </div>
     </div>
