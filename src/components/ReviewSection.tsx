@@ -50,13 +50,13 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
                     size={18} 
                     className={cn(
                       "text-yellow-400",
-                      i >= Math.round(totalRating) && "text-gray-200"
+                      i >= Math.round(totalRating) && "text-gray-600"
                     )} 
                     fill={i < Math.round(totalRating) ? "currentColor" : "none"}
                   />
                 ))}
               </div>
-              <div className="text-sm text-gray-500">{reviewCount} reviews</div>
+              <div className="text-sm text-gray-400">{reviewCount} reviews</div>
             </div>
             
             <div className="space-y-2">
@@ -73,13 +73,13 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
                     <span>{item.rating}</span>
                     <Star size={12} className="ml-0.5 text-yellow-400" fill="currentColor" />
                   </div>
-                  <div className="flex-1 mx-2 h-2 rounded-full bg-gray-100 overflow-hidden">
+                  <div className="flex-1 mx-2 h-2 rounded-full bg-gray-800 overflow-hidden">
                     <div 
                       className="h-full bg-yellow-400 rounded-full"
                       style={{ width: `${item.percentage}%` }}
                     ></div>
                   </div>
-                  <div className="w-8 text-right text-gray-500">{item.count}</div>
+                  <div className="w-8 text-right text-gray-400">{item.count}</div>
                 </button>
               ))}
             </div>
@@ -95,7 +95,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
         <div>
           <div className="flex justify-between items-center mb-6">
             <FadeIn>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-400">
                 {activeFilter 
                   ? `Showing ${filteredReviews.length} reviews with ${activeFilter} stars` 
                   : `Showing all ${reviews.length} reviews`}
@@ -114,20 +114,20 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
             <FadeIn>
               <div className="text-center py-10">
                 <div className="text-lg font-medium mb-2">No reviews with this rating</div>
-                <p className="text-gray-500">Try selecting a different rating or view all reviews.</p>
+                <p className="text-gray-400">Try selecting a different rating or view all reviews.</p>
               </div>
             </FadeIn>
           ) : (
             <StaggeredChildren staggerDelay={100} initialDelay={200} className="space-y-6">
               {filteredReviews.map((review) => (
-                <div key={review.id} className="border-b border-gray-100 pb-6">
+                <div key={review.id} className="border-b border-gray-800 pb-6">
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <div className="font-medium">{review.author}</div>
-                      <div className="text-sm text-gray-500 flex items-center">
+                      <div className="text-sm text-gray-400 flex items-center">
                         {review.date}
                         {review.verified && (
-                          <span className="ml-2 bg-green-50 text-green-600 text-xs px-1.5 py-0.5 rounded flex items-center">
+                          <span className="ml-2 bg-green-900 text-green-400 text-xs px-1.5 py-0.5 rounded flex items-center">
                             <Check size={10} className="mr-0.5" />
                             Verified
                           </span>
@@ -141,7 +141,7 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
                           size={14} 
                           className={cn(
                             "text-yellow-400",
-                            i >= review.rating && "text-gray-200"
+                            i >= review.rating && "text-gray-600"
                           )} 
                           fill={i < review.rating ? "currentColor" : "none"}
                         />
@@ -150,9 +150,9 @@ const ReviewSection = ({ reviews, totalRating, reviewCount }: ReviewSectionProps
                   </div>
                   
                   <h3 className="font-medium mb-2">{review.title}</h3>
-                  <p className="text-gray-600 mb-3">{review.content}</p>
+                  <p className="text-gray-300 mb-3">{review.content}</p>
                   
-                  <button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
+                  <button className="flex items-center text-sm text-gray-400 hover:text-gray-300">
                     <ThumbsUp size={14} className="mr-1" />
                     Helpful
                   </button>

@@ -76,7 +76,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       
       <div className="space-y-2">
         <SlideIn delay={100}>
-          <h1 className="text-2xl sm:text-3xl font-medium tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-medium tracking-tight text-white">
             {product.name}
           </h1>
         </SlideIn>
@@ -90,12 +90,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                   size={16} 
                   className={cn(
                     "text-yellow-400",
-                    i >= Math.round(product.rating) && "text-gray-200"
+                    i >= Math.round(product.rating) && "text-gray-600"
                   )} 
                   fill={i < Math.round(product.rating) ? "currentColor" : "none"}
                 />
               ))}
-              <span className="ml-2 text-sm text-gray-500">
+              <span className="ml-2 text-sm text-gray-400">
                 {product.rating} ({product.reviewCount} reviews)
               </span>
             </div>
@@ -106,14 +106,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           <div className="flex items-baseline space-x-3 mt-1">
             {formattedDiscountPrice ? (
               <>
-                <span className="text-2xl font-semibold">{formattedDiscountPrice}</span>
-                <span className="text-lg text-gray-400 line-through">{formattedPrice}</span>
-                <span className="inline-block bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-medium">
+                <span className="text-2xl font-semibold text-white">{formattedDiscountPrice}</span>
+                <span className="text-lg text-gray-500 line-through">{formattedPrice}</span>
+                <span className="inline-block bg-red-900 text-red-300 px-2 py-0.5 rounded text-xs font-medium">
                   Save {discountPercentage}%
                 </span>
               </>
             ) : (
-              <span className="text-2xl font-semibold">{formattedPrice}</span>
+              <span className="text-2xl font-semibold text-white">{formattedPrice}</span>
             )}
           </div>
         </ScaleIn>
@@ -122,7 +122,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="space-y-6 pt-2">
         <FadeIn delay={400}>
           {/* Tabs for product information */}
-          <div className="border-b border-gray-200">
+          <div className="border-b border-gray-800">
             <div className="flex space-x-8">
               {[
                 { id: 'description', label: 'Description' },
@@ -135,7 +135,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                     "py-3 text-sm font-medium border-b-2 -mb-px transition-colors",
                     activeTab === tab.id 
                       ? "border-primary text-primary" 
-                      : "border-transparent text-gray-500 hover:text-gray-700"
+                      : "border-transparent text-gray-400 hover:text-gray-300"
                   )}
                   onClick={() => setActiveTab(tab.id as any)}
                 >
@@ -148,7 +148,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           {/* Tab content */}
           <div className="py-2 min-h-[120px]">
             {activeTab === 'description' && (
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-300 leading-relaxed">
                 {product.description}
               </p>
             )}
@@ -158,7 +158,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 {product.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
                     <Check size={18} className="text-primary shrink-0 mt-0.5 mr-2" />
-                    <span>{feature}</span>
+                    <span className="text-gray-300">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -168,8 +168,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               <div className="space-y-2">
                 {Object.entries(product.details).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 text-sm">
-                    <div className="font-medium text-gray-500">{key}</div>
-                    <div className="col-span-2">{value}</div>
+                    <div className="font-medium text-gray-400">{key}</div>
+                    <div className="col-span-2 text-gray-300">{value}</div>
                   </div>
                 ))}
               </div>
@@ -195,11 +195,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         
         <ScaleIn delay={700}>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center border border-gray-200 rounded-md">
+            <div className="flex items-center border border-gray-700 rounded-md">
               <button 
                 onClick={decrementQuantity}
                 disabled={quantity <= 1}
-                className="px-3 py-2 text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                className="px-3 py-2 text-gray-400 hover:text-gray-300 disabled:opacity-50"
                 aria-label="Decrease quantity"
               >
                 -
@@ -209,7 +209,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               </div>
               <button 
                 onClick={incrementQuantity}
-                className="px-3 py-2 text-gray-500 hover:text-gray-700"
+                className="px-3 py-2 text-gray-400 hover:text-gray-300"
                 aria-label="Increase quantity"
               >
                 +
@@ -240,12 +240,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         
         <FadeIn delay={800}>
           <div className="space-y-3 pt-2">
-            <div className="flex items-center text-sm text-gray-600">
-              <Truck size={18} className="mr-2 text-gray-400" />
+            <div className="flex items-center text-sm text-gray-300">
+              <Truck size={18} className="mr-2 text-gray-500" />
               <span>Free delivery on orders over $50</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <RotateCcw size={18} className="mr-2 text-gray-400" />
+            <div className="flex items-center text-sm text-gray-300">
+              <RotateCcw size={18} className="mr-2 text-gray-500" />
               <span>30-day free returns</span>
             </div>
           </div>
