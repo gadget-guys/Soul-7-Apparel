@@ -1,4 +1,3 @@
-
 import { Product } from '@/lib/product-data';
 
 export interface TeeProduct extends Product {
@@ -10,13 +9,14 @@ export interface TeeProduct extends Product {
 export const teesProducts: TeeProduct[] = [
   {
     id: "tee-001",
-    name: "Flat-Pack T-Shirt",
-    description: "Classic cotton t-shirt with a comfortable fit and clean design.",
+    name: "MAJOR T-SHIRT",
+    description: "Here it's coming: the world's best t-shirt. Major d'Amore (pronounce 'dashmore'), surely named 'the Major Tee' like that for a purpose hidden inside while referencing a luxury design that doesn't go to the worn way 'everybody's fit on everyone would be a mother-demands hand level' only a classic. It, like in the type of shirt people hold onto for years.",
     price: 39.99,
     currency: "USD",
     rating: 4.7,
     reviewCount: 122,
     images: [
+      "public/lovable-uploads/cef185b6-a8ec-41e0-8dd2-d202755fe016.png",
       "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
     ],
     variants: [
@@ -30,20 +30,61 @@ export const teesProducts: TeeProduct[] = [
           { id: "size-tee-001-1-l", size: "L", inStock: true },
           { id: "size-tee-001-1-xl", size: "XL", inStock: true }
         ]
+      },
+      {
+        id: "variant-tee-001-2",
+        color: "White",
+        colorCode: "#FFFFFF",
+        sizes: [
+          { id: "size-tee-001-2-s", size: "S", inStock: true },
+          { id: "size-tee-001-2-m", size: "M", inStock: true },
+          { id: "size-tee-001-2-l", size: "L", inStock: true },
+          { id: "size-tee-001-2-xl", size: "XL", inStock: true }
+        ]
       }
     ],
     features: [
-      "100% cotton fabric",
+      "100% premium cotton",
       "Regular fit",
-      "Crew neck",
-      "Machine washable"
+      "Reinforced seams",
+      "Pre-shrunk fabric"
     ],
     details: {
-      "Material": "100% Cotton",
-      "Care": "Machine wash cold, tumble dry low",
-      "Origin": "Made in Portugal"
+      "SIZE": "105% TRUE ORGANIC COTTON BODY",
+      "COLOR": "BLACK",
+      "COMPOSITION": "95% COTTON/5% EL",
+      "FIT": "REGULAR",
+      "ORIGIN": "ITALY"
     },
-    reviews: []
+    reviews: [
+      {
+        id: "review-001",
+        author: "Alex J.",
+        date: "October 12, 2023",
+        rating: 5,
+        title: "Best t-shirt I've ever owned",
+        content: "The quality is incredible, and the fit is perfect. I can wear this all day without any discomfort. Fabric is amazing too - I've washed it multiple times and it still looks brand new!",
+        verified: true
+      },
+      {
+        id: "review-002",
+        author: "Morgan T.",
+        date: "September 28, 2023",
+        rating: 4,
+        title: "Great quality basic tee",
+        content: "Simple but perfect execution. The material feels premium and the stitching is solid. The fit is exactly as advertised.",
+        verified: true
+      },
+      {
+        id: "review-003",
+        author: "Sam L.",
+        date: "August 15, 2023",
+        rating: 5,
+        title: "Worth every penny",
+        content: "Perfect balance between durability and comfort. This is my go-to t-shirt now for both casual and slightly dressier occasions.",
+        verified: true
+      }
+    ]
   },
   {
     id: "tee-002",
@@ -304,5 +345,4 @@ export const teesProducts: TeeProduct[] = [
     },
     reviews: []
   },
-  // More tees can be added following the same pattern...
 ];

@@ -26,7 +26,7 @@ const TeeCard = ({ product, index = 0 }: TeeCardProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link to={`/product/${product.id}`} className="block">
+      <Link to={`/tee/${product.id}`} className="block">
         <div className="relative overflow-hidden rounded-lg aspect-square bg-gray-900 mb-3">
           {/* Product image */}
           <div
