@@ -35,7 +35,7 @@ const SizeSelector = ({
                 "relative py-2 px-3 rounded border text-sm font-medium transition-all duration-200",
                 isSelected 
                   ? "border-primary bg-primary/10 text-primary" 
-                  : "border-gray-200 hover:border-gray-300",
+                  : "border-gray-700 hover:border-gray-500", // Changed from gray-200/300 to dark grays
                 !sizeOption.inStock && "opacity-40 cursor-not-allowed"
               )}
               onClick={() => sizeOption.inStock && onSelectSize(sizeOption)}
@@ -44,7 +44,7 @@ const SizeSelector = ({
             >
               {sizeOption.size}
               {!sizeOption.inStock && (
-                <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500">
+                <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-400">
                   Out of stock
                 </div>
               )}
