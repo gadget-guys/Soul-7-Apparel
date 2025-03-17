@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/lib/supabase';
 
 interface ApiKeys {
@@ -12,37 +13,67 @@ interface ApiKeys {
   huggingface_api_key?: string;
 }
 
+interface PaymentGateways {
+  stripe_publishable_key?: string;
+  stripe_secret_key?: string;
+  stripe_enabled?: boolean;
+  paypal_client_id?: string;
+  paypal_client_secret?: string;
+  paypal_enabled?: boolean;
+}
+
 const AdminPortal = () => {
   const [apiKeys, setApiKeys] = useState<ApiKeys>({});
+  const [paymentGateways, setPaymentGateways] = useState<PaymentGateways>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchApiKeys = async () => {
+    const fetchSettings = async () => {
       try {
-        const { data, error } = await supabase
+        // Fetch API keys
+        const { data: apiKeysData, error: apiKeysError } = await supabase
           .from('api_keys')
           .select('*')
           .single();
           
-        if (error && error.code !== 'PGRST116') throw error;
+        if (apiKeysError && apiKeysError.code !== 'PGRST116') throw apiKeysError;
         
-        if (data) {
+        if (apiKeysData) {
           setApiKeys({
-            openai_api_key: data.openai_api_key || '',
-            replicate_api_key: data.replicate_api_key || '',
-            huggingface_api_key: data.huggingface_api_key || ''
+            openai_api_key: apiKeysData.openai_api_key || '',
+            replicate_api_key: apiKeysData.replicate_api_key || '',
+            huggingface_api_key: apiKeysData.huggingface_api_key || ''
+          });
+        }
+
+        // Fetch payment gateway settings
+        const { data: paymentData, error: paymentError } = await supabase
+          .from('payment_gateways')
+          .select('*')
+          .single();
+          
+        if (paymentError && paymentError.code !== 'PGRST116') throw paymentError;
+        
+        if (paymentData) {
+          setPaymentGateways({
+            stripe_publishable_key: paymentData.stripe_publishable_key || '',
+            stripe_secret_key: paymentData.stripe_secret_key || '',
+            stripe_enabled: paymentData.stripe_enabled || false,
+            paypal_client_id: paymentData.paypal_client_id || '',
+            paypal_client_secret: paymentData.paypal_client_secret || '',
+            paypal_enabled: paymentData.paypal_enabled || false
           });
         }
       } catch (error) {
-        console.error('Error fetching API keys:', error);
+        console.error('Error fetching settings:', error);
       } finally {
         setLoading(false);
       }
     };
     
-    fetchApiKeys();
+    fetchSettings();
   }, []);
 
   const handleSaveApiKeys = async () => {
@@ -74,8 +105,44 @@ const AdminPortal = () => {
     }
   };
 
+  const handleSavePaymentGateways = async () => {
+    setSaving(true);
+    
+    try {
+      const { error } = await supabase
+        .from('payment_gateways')
+        .upsert({
+          id: 1,  // Using a fixed ID for single record
+          ...paymentGateways,
+          updated_at: new Date()
+        });
+        
+      if (error) throw error;
+      
+      toast({
+        title: "Payment settings saved",
+        description: "Your payment gateway settings have been saved successfully."
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error saving payment settings",
+        description: error.message || "There was an error saving your payment gateway settings.",
+        variant: "destructive"
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleApiKeyChange = (key: keyof ApiKeys, value: string) => {
     setApiKeys(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  const handlePaymentGatewayChange = (key: keyof PaymentGateways, value: string | boolean) => {
+    setPaymentGateways(prev => ({
       ...prev,
       [key]: value
     }));
@@ -96,6 +163,7 @@ const AdminPortal = () => {
       <Tabs defaultValue="api-keys">
         <TabsList className="mb-4">
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
+          <TabsTrigger value="payment-gateways">Payment Gateways</TabsTrigger>
           <TabsTrigger value="ai-settings">AI Settings</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
         </TabsList>
@@ -149,6 +217,108 @@ const AdminPortal = () => {
               disabled={saving}
             >
               {saving ? "Saving..." : "Save API Keys"}
+            </Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="payment-gateways">
+          <div className="space-y-6">
+            <div className="border border-gray-700 rounded-lg p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">Stripe Integration</h3>
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="stripe-enabled"
+                    checked={paymentGateways.stripe_enabled || false}
+                    onCheckedChange={(checked) => 
+                      handlePaymentGatewayChange('stripe_enabled', checked)
+                    }
+                  />
+                  <label htmlFor="stripe-enabled" className="text-sm">
+                    {paymentGateways.stripe_enabled ? "Enabled" : "Disabled"}
+                  </label>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="stripe-publishable-key" className="block text-sm font-medium">
+                  Publishable Key
+                </label>
+                <Input
+                  id="stripe-publishable-key"
+                  type="password"
+                  value={paymentGateways.stripe_publishable_key || ''}
+                  onChange={(e) => handlePaymentGatewayChange('stripe_publishable_key', e.target.value)}
+                  className="bg-gray-800 border-gray-700"
+                  placeholder="pk_..."
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="stripe-secret-key" className="block text-sm font-medium">
+                  Secret Key
+                </label>
+                <Input
+                  id="stripe-secret-key"
+                  type="password"
+                  value={paymentGateways.stripe_secret_key || ''}
+                  onChange={(e) => handlePaymentGatewayChange('stripe_secret_key', e.target.value)}
+                  className="bg-gray-800 border-gray-700"
+                  placeholder="sk_..."
+                />
+              </div>
+            </div>
+            
+            <div className="border border-gray-700 rounded-lg p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">PayPal Integration</h3>
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="paypal-enabled"
+                    checked={paymentGateways.paypal_enabled || false}
+                    onCheckedChange={(checked) => 
+                      handlePaymentGatewayChange('paypal_enabled', checked)
+                    }
+                  />
+                  <label htmlFor="paypal-enabled" className="text-sm">
+                    {paymentGateways.paypal_enabled ? "Enabled" : "Disabled"}
+                  </label>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="paypal-client-id" className="block text-sm font-medium">
+                  Client ID
+                </label>
+                <Input
+                  id="paypal-client-id"
+                  type="password"
+                  value={paymentGateways.paypal_client_id || ''}
+                  onChange={(e) => handlePaymentGatewayChange('paypal_client_id', e.target.value)}
+                  className="bg-gray-800 border-gray-700"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="paypal-client-secret" className="block text-sm font-medium">
+                  Client Secret
+                </label>
+                <Input
+                  id="paypal-client-secret"
+                  type="password"
+                  value={paymentGateways.paypal_client_secret || ''}
+                  onChange={(e) => handlePaymentGatewayChange('paypal_client_secret', e.target.value)}
+                  className="bg-gray-800 border-gray-700"
+                />
+              </div>
+            </div>
+            
+            <Button 
+              onClick={handleSavePaymentGateways} 
+              disabled={saving}
+              className="mt-4"
+            >
+              {saving ? "Saving..." : "Save Payment Settings"}
             </Button>
           </div>
         </TabsContent>
