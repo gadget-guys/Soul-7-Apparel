@@ -7,6 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/lib/supabase';
 import { getPaymentGateways, updatePaymentGateways } from '@/lib/payment';
+import { UserManagement } from '@/components/admin/UserManagement';
+import { InventoryManagement } from '@/components/admin/InventoryManagement';
+import { OrderManagement } from '@/components/admin/OrderManagement';
+import { CustomerManagement } from '@/components/admin/CustomerManagement';
 
 interface ApiKeys {
   openai_api_key?: string;
@@ -155,13 +159,32 @@ const AdminPortal = () => {
     <div className="bg-gray-900 p-6 rounded-lg">
       <h2 className="text-xl font-medium mb-4">Admin Portal</h2>
       
-      <Tabs defaultValue="api-keys">
-        <TabsList className="mb-4">
+      <Tabs defaultValue="inventory">
+        <TabsList className="mb-4 flex flex-wrap">
+          <TabsTrigger value="inventory">Inventory</TabsTrigger>
+          <TabsTrigger value="orders">Orders</TabsTrigger>
+          <TabsTrigger value="customers">Customers</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="payment-gateways">Payment Gateways</TabsTrigger>
           <TabsTrigger value="ai-settings">AI Settings</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="inventory">
+          <InventoryManagement />
+        </TabsContent>
+        
+        <TabsContent value="orders">
+          <OrderManagement />
+        </TabsContent>
+        
+        <TabsContent value="customers">
+          <CustomerManagement />
+        </TabsContent>
+        
+        <TabsContent value="users">
+          <UserManagement />
+        </TabsContent>
         
         <TabsContent value="api-keys">
           <div className="space-y-4">
@@ -329,20 +352,6 @@ const AdminPortal = () => {
             {/* Placeholder for future AI settings UI */}
             <div className="p-4 border border-gray-700 rounded-md text-center text-gray-400">
               Advanced AI settings coming soon
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="users">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium mb-2">User Management</h3>
-            <p className="text-gray-400 mb-4">
-              Manage users and their permissions.
-            </p>
-            
-            {/* Placeholder for future user management UI */}
-            <div className="p-4 border border-gray-700 rounded-md text-center text-gray-400">
-              User management features coming soon
             </div>
           </div>
         </TabsContent>
