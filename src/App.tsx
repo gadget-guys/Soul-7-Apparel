@@ -12,12 +12,12 @@ import NotFound from './pages/NotFound';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import AccountPage from './pages/account/AccountPage';
-import UserProfile from './pages/account/UserProfile';
+import UserProfile, { SimpleUser } from './pages/account/UserProfile';
 import AdminPortal from './pages/account/AdminPortal';
 
 function App() {
-  // Mocked user for UserProfile component
-  const mockUser = {
+  // Mocked user for UserProfile component, now using SimpleUser interface
+  const mockUser: SimpleUser = {
     id: 'user-1',
     name: 'John Doe',
     email: 'john.doe@example.com',
