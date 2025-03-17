@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, ChevronLeft, ChevronRight, ShoppingBag, CreditCard } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { useCart, CartItem } from '@/hooks/useCart';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -164,7 +164,7 @@ const Cart = () => {
 };
 
 interface CartItemRowProps {
-  item: ReturnType<typeof useCart>["cartItems"][0];
+  item: CartItem;
   onRemove: () => void;
   onUpdateQuantity: (quantity: number) => void;
 }

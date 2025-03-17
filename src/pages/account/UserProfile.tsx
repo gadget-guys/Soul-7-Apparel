@@ -82,9 +82,10 @@ const UserProfile = ({ user }: UserProfileProps) => {
         updated_at: new Date().toISOString(),
       };
       
+      // Fix the upsert call to remove the 'returning' option which is not valid
       const { error } = await supabase
         .from('profiles')
-        .upsert(updates, { returning: 'minimal' });
+        .upsert(updates);
       
       if (error) {
         throw error;

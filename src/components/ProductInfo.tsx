@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import AddToCartButton from '@/components/product/AddToCartButton';
 import ShippingInfo from '@/components/product/ShippingInfo';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 import { useToast } from '@/components/ui/use-toast';
+import { cn } from '@/lib/utils';
 
 interface ProductInfoProps {
   product: Product;
@@ -36,7 +36,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   
   const handleSelectVariant = (variant: ProductVariant) => {
     setSelectedVariant(variant);
-    // Reset size to first available size in this variant
     setSelectedSize(variant.sizes[0] || null);
   };
   
@@ -68,7 +67,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     ? Math.round(100 - (product.discountPrice / product.price) * 100)
     : null;
 
-  // Get the primary image for the selected variant
   const variantImage = selectedVariant?.images?.[0] || product.images[0];
   
   const isAddToCartDisabled = !selectedSize || !selectedSize.inStock;

@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useCart } from '@/hooks/useCart';
+import { useCart, CartItem } from '@/hooks/useCart';
 import { cn } from '@/lib/utils';
 
 export function MiniCart() {
@@ -91,7 +91,7 @@ export function MiniCart() {
 }
 
 interface MiniCartItemProps {
-  item: ReturnType<typeof useCart>["cartItems"][0];
+  item: CartItem;
   onRemove: () => void;
   onUpdateQuantity: (quantity: number) => void;
 }
