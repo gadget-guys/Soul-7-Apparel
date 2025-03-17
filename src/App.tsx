@@ -12,18 +12,13 @@ import NotFound from './pages/NotFound';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import AccountPage from './pages/account/AccountPage';
-import UserProfile, { SimpleUser } from './pages/account/UserProfile';
+import UserProfile from './pages/account/UserProfile';
+import UserSettings from './pages/account/UserSettings';
+import UserOrders from './pages/account/UserOrders';
+import UserBilling from './pages/account/UserBilling';
 import AdminPortal from './pages/account/AdminPortal';
 
 function App() {
-  // Mocked user for UserProfile component, now using SimpleUser interface
-  const mockUser: SimpleUser = {
-    id: 'user-1',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3'
-  };
-
   return (
     <BrowserRouter>
       <Routes>
@@ -37,7 +32,10 @@ function App() {
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/account" element={<AccountPage />} />
-        <Route path="/account/profile" element={<UserProfile user={mockUser} />} />
+        <Route path="/account/profile" element={<UserProfile />} />
+        <Route path="/account/settings" element={<UserSettings />} />
+        <Route path="/account/orders" element={<UserOrders />} />
+        <Route path="/account/billing" element={<UserBilling />} />
         <Route path="/account/admin" element={<AdminPortal />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

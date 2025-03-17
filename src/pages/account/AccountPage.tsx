@@ -10,6 +10,9 @@ import Navbar from '@/components/navbar';
 import { User } from '@supabase/supabase-js';
 import AdminPortal from './AdminPortal';
 import UserProfile from './UserProfile';
+import UserSettings from './UserSettings';
+import UserOrders from './UserOrders';
+import UserBilling from './UserBilling';
 
 const AccountPage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -79,6 +82,8 @@ const AccountPage = () => {
               <TabsList className="mb-6">
                 <TabsTrigger value="profile">Profile</TabsTrigger>
                 <TabsTrigger value="orders">Orders</TabsTrigger>
+                <TabsTrigger value="billing">Billing</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
                 {isAdmin && <TabsTrigger value="admin">Admin Portal</TabsTrigger>}
               </TabsList>
               
@@ -87,10 +92,15 @@ const AccountPage = () => {
               </TabsContent>
               
               <TabsContent value="orders">
-                <div className="bg-gray-900 p-6 rounded-lg">
-                  <h2 className="text-xl font-medium mb-4">Your Orders</h2>
-                  <p className="text-gray-400">You haven't placed any orders yet.</p>
-                </div>
+                <UserOrders user={user} />
+              </TabsContent>
+              
+              <TabsContent value="billing">
+                <UserBilling user={user} />
+              </TabsContent>
+              
+              <TabsContent value="settings">
+                <UserSettings user={user} />
               </TabsContent>
               
               {isAdmin && (
