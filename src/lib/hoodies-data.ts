@@ -1,7 +1,6 @@
-
 import { type Product } from "./product-data";
 
-// Extended type for Tee specific properties
+// Extended type for Hoodie specific properties
 export interface HoodieProduct extends Product {
   material?: string;
   isSustainable?: boolean;
@@ -25,6 +24,19 @@ export const hoodiesProducts: HoodieProduct[] = [
     reviewCount: 124,
     new: true,
     material: "80% Cotton, 20% Polyester",
+    features: [
+      "Premium cotton blend fabric",
+      "Regular fit",
+      "Drawstring hood",
+      "Kangaroo pocket",
+      "Ribbed cuffs and hem"
+    ],
+    details: {
+      "Material": "80% Cotton, 20% Polyester",
+      "Care": "Machine wash cold, tumble dry low",
+      "Fit": "Regular fit",
+      "Origin": "Imported"
+    },
     variants: [
       {
         id: "hoodie-001-black",
@@ -88,6 +100,19 @@ export const hoodiesProducts: HoodieProduct[] = [
     ],
     rating: 4.6,
     reviewCount: 87,
+    features: [
+      "Oversized, relaxed fit",
+      "Embroidered logo detail",
+      "Heavyweight fleece",
+      "Drop shoulder design",
+      "Extra-long drawstrings"
+    ],
+    details: {
+      "Material": "70% Cotton, 30% Polyester",
+      "Care": "Machine wash cold, tumble dry low",
+      "Fit": "Oversized fit",
+      "Origin": "Imported"
+    },
     variants: [
       {
         id: "hoodie-002-white",
@@ -144,6 +169,20 @@ export const hoodiesProducts: HoodieProduct[] = [
     rating: 4.9,
     reviewCount: 156,
     isExclusive: true,
+    features: [
+      "Premium heavyweight fabric",
+      "Full metal zipper",
+      "Split kangaroo pockets",
+      "Minimal branding",
+      "Double-layered hood"
+    ],
+    details: {
+      "Material": "90% Cotton, 10% Polyester",
+      "Care": "Machine wash cold, hang dry",
+      "Fit": "Regular fit",
+      "Origin": "Imported",
+      "Weight": "400 GSM"
+    },
     variants: [
       {
         id: "hoodie-003-black",
@@ -209,6 +248,20 @@ export const hoodiesProducts: HoodieProduct[] = [
     reviewCount: 93,
     isSustainable: true,
     material: "75% Recycled Polyester, 25% Elastane",
+    features: [
+      "4-way stretch fabric",
+      "Moisture-wicking technology",
+      "Reflective details",
+      "Thumbholes at cuffs",
+      "Zippered side pockets"
+    ],
+    details: {
+      "Material": "75% Recycled Polyester, 25% Elastane",
+      "Care": "Machine wash cold, hang dry",
+      "Fit": "Athletic fit",
+      "Origin": "Imported",
+      "Features": "Quick-drying, Anti-odor"
+    },
     variants: [
       {
         id: "hoodie-004-blue",
@@ -273,6 +326,20 @@ export const hoodiesProducts: HoodieProduct[] = [
     rating: 4.5,
     reviewCount: 78,
     soldOut: true,
+    features: [
+      "Garment-washed for softness",
+      "Vintage-inspired details",
+      "Relaxed, comfortable fit",
+      "Raglan sleeves",
+      "Raw edge details"
+    ],
+    details: {
+      "Material": "100% Cotton",
+      "Care": "Machine wash cold, tumble dry low",
+      "Fit": "Relaxed fit",
+      "Origin": "Imported",
+      "Process": "Garment dyed and washed"
+    },
     variants: [
       {
         id: "hoodie-005-green",

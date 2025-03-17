@@ -1,4 +1,3 @@
-
 import { type Product } from "./product-data";
 
 // Extended type for Hat specific properties
@@ -26,6 +25,18 @@ export const hatsProducts: HatProduct[] = [
     reviewCount: 89,
     new: true,
     style: "Structured Cap",
+    features: [
+      "6-panel structured design",
+      "Embroidered logo",
+      "Adjustable snapback closure",
+      "Premium cotton twill",
+      "Moisture-wicking sweatband"
+    ],
+    details: {
+      "Material": "100% Cotton Twill",
+      "Care": "Spot clean only",
+      "Origin": "Imported"
+    },
     variants: [
       {
         id: "hat-001-black",
@@ -84,6 +95,18 @@ export const hatsProducts: HatProduct[] = [
     rating: 4.5,
     reviewCount: 64,
     style: "Bucket Hat",
+    features: [
+      "All-around brim design",
+      "Lightweight cotton fabric",
+      "Breathable eyelets",
+      "Packable design",
+      "Casual, relaxed fit"
+    ],
+    details: {
+      "Material": "100% Cotton Twill",
+      "Care": "Machine wash cold, hang dry",
+      "Origin": "Imported"
+    },
     variants: [
       {
         id: "hat-002-tan",
@@ -137,6 +160,19 @@ export const hatsProducts: HatProduct[] = [
     reviewCount: 112,
     material: "100% Merino Wool",
     style: "Beanie",
+    features: [
+      "Premium merino wool construction",
+      "Ribbed knit pattern",
+      "Fold-over cuff design",
+      "Extra stretch for comfort",
+      "Temperature regulating material"
+    ],
+    details: {
+      "Material": "100% Merino Wool",
+      "Care": "Hand wash cold, lay flat to dry",
+      "Origin": "Imported",
+      "Warmth Level": "Medium-Heavy"
+    },
     variants: [
       {
         id: "hat-003-gray",
@@ -195,6 +231,18 @@ export const hatsProducts: HatProduct[] = [
     rating: 4.6,
     reviewCount: 76,
     style: "Trucker Cap",
+    features: [
+      "Structured front panels",
+      "Breathable mesh back",
+      "Snapback closure",
+      "Slightly curved brim",
+      "Embroidered eyelets"
+    ],
+    details: {
+      "Material": "65% Polyester, 35% Cotton",
+      "Care": "Spot clean only",
+      "Origin": "Imported"
+    },
     variants: [
       {
         id: "hat-004-blue",
@@ -245,6 +293,19 @@ export const hatsProducts: HatProduct[] = [
     reviewCount: 54,
     isExclusive: true,
     style: "Sun Hat",
+    features: [
+      "Wide 3.5-inch brim",
+      "UPF 50+ sun protection",
+      "Interior adjustable drawstring",
+      "Decorative band detail",
+      "Packable design"
+    ],
+    details: {
+      "Material": "Paper Straw",
+      "Care": "Spot clean only",
+      "Origin": "Imported",
+      "Brim Width": "3.5 inches"
+    },
     variants: [
       {
         id: "hat-005-straw",

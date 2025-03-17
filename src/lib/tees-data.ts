@@ -1,3 +1,4 @@
+
 import { Product } from '@/lib/product-data';
 
 export interface TeeProduct extends Product {
@@ -24,6 +25,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-001-1",
         color: "Black",
         colorCode: "#000000",
+        images: ["/lovable-uploads/cef185b6-a8ec-41e0-8dd2-d202755fe016.png"],
         sizes: [
           { id: "size-tee-001-1-s", size: "S", inStock: true },
           { id: "size-tee-001-1-m", size: "M", inStock: true },
@@ -35,6 +37,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-001-2",
         color: "White",
         colorCode: "#FFFFFF",
+        images: ["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-001-2-s", size: "S", inStock: true },
           { id: "size-tee-001-2-m", size: "M", inStock: true },
@@ -87,6 +90,7 @@ export const teesProducts: TeeProduct[] = [
       }
     ]
   },
+  // For other Tee products, add the images property to each variant
   {
     id: "tee-002",
     name: "Box Fit T-Shirt - Ready To Dye",
@@ -103,6 +107,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-002-1",
         color: "Light Grey",
         colorCode: "#D3D3D3",
+        images: ["https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-002-1-s", size: "S", inStock: true },
           { id: "size-tee-002-1-m", size: "M", inStock: true },
@@ -141,6 +146,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-003-1",
         color: "Black",
         colorCode: "#000000",
+        images: ["https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-003-1-s", size: "S", inStock: true },
           { id: "size-tee-003-1-m", size: "M", inStock: true },
@@ -178,6 +184,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-004-1",
         color: "White",
         colorCode: "#FFFFFF",
+        images: ["https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-004-1-s", size: "S", inStock: true },
           { id: "size-tee-004-1-m", size: "M", inStock: true },
@@ -215,6 +222,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-005-1",
         color: "White",
         colorCode: "#FFFFFF",
+        images: ["https://images.unsplash.com/photo-1521498542256-5aeb47ba2b36?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-005-1-s", size: "S", inStock: true },
           { id: "size-tee-005-1-m", size: "M", inStock: true },
@@ -252,6 +260,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-006-1",
         color: "Cream",
         colorCode: "#F5F5DC",
+        images: ["https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-006-1-s", size: "S", inStock: true },
           { id: "size-tee-006-1-m", size: "M", inStock: true },
@@ -289,6 +298,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-007-1",
         color: "Black",
         colorCode: "#000000",
+        images: ["https://images.unsplash.com/photo-1511746315387-c4a76990fdce?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-007-1-s", size: "S", inStock: true },
           { id: "size-tee-007-1-m", size: "M", inStock: true },
@@ -326,6 +336,7 @@ export const teesProducts: TeeProduct[] = [
         id: "variant-tee-008-1",
         color: "White",
         colorCode: "#FFFFFF",
+        images: ["https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
         sizes: [
           { id: "size-tee-008-1-s", size: "S", inStock: true },
           { id: "size-tee-008-1-m", size: "M", inStock: true },

@@ -1,3 +1,4 @@
+
 export interface ProductVariant {
   id: string;
   color: string;
@@ -58,6 +59,7 @@ export const featuredProduct: Product = {
       id: "variant-001",
       color: "Space Gray",
       colorCode: "#333333",
+      images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
       sizes: [
         { id: "size-001", size: "Standard", inStock: true }
       ]
@@ -66,6 +68,7 @@ export const featuredProduct: Product = {
       id: "variant-002",
       color: "Silver",
       colorCode: "#DDDDDD",
+      images: ["https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
       sizes: [
         { id: "size-002", size: "Standard", inStock: true }
       ]
@@ -74,6 +77,7 @@ export const featuredProduct: Product = {
       id: "variant-003",
       color: "Midnight Blue",
       colorCode: "#000080",
+      images: ["https://images.unsplash.com/photo-1524678714210-9917a6c619c2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
       sizes: [
         { id: "size-003", size: "Standard", inStock: true }
       ]
@@ -82,6 +86,7 @@ export const featuredProduct: Product = {
       id: "variant-004",
       color: "Rose Gold",
       colorCode: "#B76E79",
+      images: ["https://images.unsplash.com/photo-1545127398-14699f92334b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"],
       sizes: [
         { id: "size-004", size: "Standard", inStock: false }
       ]
