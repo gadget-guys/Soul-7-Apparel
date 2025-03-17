@@ -35,7 +35,7 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 25 }
+          { id: "size-hat-001-os", size: "One Size", inStock: true }
         ]
       },
       {
@@ -46,26 +46,28 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 18 }
+          { id: "size-hat-001-navy-os", size: "One Size", inStock: true }
         ]
       }
     ],
     reviews: [
       {
         id: "rev-hat-001",
-        user: "Chris",
-        rating: 5,
+        author: "Chris",
         date: "2023-11-20",
+        rating: 5,
         title: "Perfect fit",
-        comment: "The adjustable back makes this hat fit perfectly. Great quality and looks exactly as pictured."
+        content: "The adjustable back makes this hat fit perfectly. Great quality and looks exactly as pictured.",
+        verified: true
       },
       {
         id: "rev-hat-002",
-        user: "Pat",
-        rating: 4,
+        author: "Pat",
         date: "2023-10-15",
+        rating: 4,
         title: "Great everyday cap",
-        comment: "I wear this almost daily now. The structure holds up well even after multiple wears."
+        content: "I wear this almost daily now. The structure holds up well even after multiple wears.",
+        verified: true
       }
     ]
   },
@@ -91,8 +93,8 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "S/M", stock: 15 },
-          { size: "L/XL", stock: 12 }
+          { id: "size-hat-002-tan-sm", size: "S/M", inStock: true },
+          { id: "size-hat-002-tan-lxl", size: "L/XL", inStock: true }
         ]
       },
       {
@@ -103,19 +105,20 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1582791694770-cbdc9dda338f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "S/M", stock: 10 },
-          { size: "L/XL", stock: 8 }
+          { id: "size-hat-002-black-sm", size: "S/M", inStock: true },
+          { id: "size-hat-002-black-lxl", size: "L/XL", inStock: true }
         ]
       }
     ],
     reviews: [
       {
         id: "rev-hat-003",
-        user: "Jordan",
-        rating: 5,
+        author: "Jordan",
         date: "2023-09-18",
+        rating: 5,
         title: "Stylish and practical",
-        comment: "Love this bucket hat! It's great for sun protection and completes my outfit perfectly."
+        content: "Love this bucket hat! It's great for sun protection and completes my outfit perfectly.",
+        verified: true
       }
     ]
   },
@@ -143,7 +146,7 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 20 }
+          { id: "size-hat-003-gray-os", size: "One Size", inStock: true }
         ]
       },
       {
@@ -154,26 +157,28 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1576063892887-ae8e2b28f1d0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 15 }
+          { id: "size-hat-003-red-os", size: "One Size", inStock: true }
         ]
       }
     ],
     reviews: [
       {
         id: "rev-hat-004",
-        user: "Taylor",
-        rating: 5,
+        author: "Taylor",
         date: "2023-12-05",
+        rating: 5,
         title: "So warm and comfortable",
-        comment: "This beanie is incredibly soft and keeps me warm in freezing temperatures. Worth every penny."
+        content: "This beanie is incredibly soft and keeps me warm in freezing temperatures. Worth every penny.",
+        verified: true
       },
       {
         id: "rev-hat-005",
-        user: "Alex",
-        rating: 5,
+        author: "Alex",
         date: "2023-11-30",
+        rating: 5,
         title: "Perfect winter essential",
-        comment: "The merino wool is so much better than my previous beanies. Not itchy at all and very warm."
+        content: "The merino wool is so much better than my previous beanies. Not itchy at all and very warm.",
+        verified: true
       }
     ]
   },
@@ -199,7 +204,7 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1572307480813-ceb0e59d8325?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 18 }
+          { id: "size-hat-004-blue-os", size: "One Size", inStock: true }
         ]
       },
       {
@@ -210,18 +215,19 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "One Size", stock: 14 }
+          { id: "size-hat-004-black-os", size: "One Size", inStock: true }
         ]
       }
     ],
     reviews: [
       {
         id: "rev-hat-006",
-        user: "Jamie",
-        rating: 5,
+        author: "Jamie",
         date: "2023-10-20",
+        rating: 5,
         title: "Great for summer",
-        comment: "The mesh back keeps my head cool even on hot days. The adjustable snap back fits perfectly."
+        content: "The mesh back keeps my head cool even on hot days. The adjustable snap back fits perfectly.",
+        verified: true
       }
     ]
   },
@@ -248,8 +254,8 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1565839751975-2281c7d2a587?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "S/M", stock: 12 },
-          { size: "L/XL", stock: 9 }
+          { id: "size-hat-005-straw-sm", size: "S/M", inStock: true },
+          { id: "size-hat-005-straw-lxl", size: "L/XL", inStock: true }
         ]
       },
       {
@@ -260,27 +266,29 @@ export const hatsProducts: HatProduct[] = [
           "https://images.unsplash.com/photo-1587063690577-26711d52184e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
         ],
         sizes: [
-          { size: "S/M", stock: 8 },
-          { size: "L/XL", stock: 6 }
+          { id: "size-hat-005-black-sm", size: "S/M", inStock: true },
+          { id: "size-hat-005-black-lxl", size: "L/XL", inStock: true }
         ]
       }
     ],
     reviews: [
       {
         id: "rev-hat-007",
-        user: "Morgan",
-        rating: 5,
+        author: "Morgan",
         date: "2023-08-15",
+        rating: 5,
         title: "Perfect beach accessory",
-        comment: "This hat saved me during my beach vacation. Great sun protection and still looks fashionable."
+        content: "This hat saved me during my beach vacation. Great sun protection and still looks fashionable.",
+        verified: true
       },
       {
         id: "rev-hat-008",
-        user: "Casey",
-        rating: 5,
+        author: "Casey",
         date: "2023-07-28",
+        rating: 5,
         title: "Chic and functional",
-        comment: "I get so many compliments on this hat. It's sturdy enough to hold its shape but still packable."
+        content: "I get so many compliments on this hat. It's sturdy enough to hold its shape but still packable.",
+        verified: true
       }
     ]
   }
