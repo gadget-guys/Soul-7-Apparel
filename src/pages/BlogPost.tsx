@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FadeIn, SlideIn } from '@/components/ui/transitions';
@@ -9,22 +8,21 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/layout/Footer';
-import BlogCard, { BlogPost } from '@/components/blog/BlogCard';
+import BlogCard from '@/components/blog/BlogCard';
+import type { BlogPost as BlogPostType } from '@/components/blog/BlogCard';
 import { blogPosts } from '@/lib/blog-data';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
   const { toast } = useToast();
   
   useEffect(() => {
-    // Find the post with the matching slug
     const currentPost = blogPosts.find(p => p.slug === slug);
     setPost(currentPost || null);
     
     if (currentPost) {
-      // Find related posts by checking if they share a category or tags
       const related = blogPosts
         .filter(p => p.id !== currentPost.id)
         .filter(p => 
@@ -35,7 +33,6 @@ const BlogPost = () => {
       setRelatedPosts(related);
     }
     
-    // Scroll to top on load
     window.scrollTo(0, 0);
   }, [slug]);
   
