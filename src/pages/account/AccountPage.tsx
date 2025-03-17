@@ -13,6 +13,7 @@ import UserProfile from './UserProfile';
 import UserSettings from './UserSettings';
 import UserOrders from './UserOrders';
 import UserBilling from './UserBilling';
+import UserWishlist from './UserWishlist';
 
 const AccountPage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -37,7 +38,7 @@ const AccountPage = () => {
           
         setIsAdmin(profile?.is_admin || false);
       } else {
-        navigate('/account/login');
+        navigate('/auth/login');
       }
       
       setLoading(false);
@@ -82,6 +83,7 @@ const AccountPage = () => {
               <TabsList className="mb-6">
                 <TabsTrigger value="profile">Profile</TabsTrigger>
                 <TabsTrigger value="orders">Orders</TabsTrigger>
+                <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                 <TabsTrigger value="billing">Billing</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
                 {isAdmin && <TabsTrigger value="admin">Admin Portal</TabsTrigger>}
@@ -93,6 +95,10 @@ const AccountPage = () => {
               
               <TabsContent value="orders">
                 <UserOrders user={user} />
+              </TabsContent>
+              
+              <TabsContent value="wishlist">
+                <UserWishlist user={user} />
               </TabsContent>
               
               <TabsContent value="billing">

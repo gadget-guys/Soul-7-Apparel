@@ -1,40 +1,22 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Package, Eye, ShoppingBag, Truck, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { FadeIn, StaggeredChildren } from '@/components/ui/transitions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PackageOpen, Clock, CheckCircle, XCircle, ChevronRight, TruckIcon } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { supabase } from '@/lib/supabase';
+import { FadeIn } from '@/components/ui/transitions';
 import { User } from '@supabase/supabase-js';
 
 interface Order {
   id: string;
-  order_number: string;
+  orderNumber: string;
   date: string;
   status: 'processing' | 'shipped' | 'delivered' | 'cancelled';
   total: number;
-  items: {
-    id: string;
-    name: string;
-    variant: string;
-    size: string;
-    quantity: number;
-    price: number;
-    image: string;
-  }[];
-  tracking_number?: string;
-  shipping_address: {
-    name: string;
-    street: string;
-    city: string;
-    state: string;
-    zip: string;
-    country: string;
-  };
+  items: number;
+  trackingNumber?: string;
+  trackingUrl?: string;
+  estimatedDelivery?: string;
 }
 
 interface UserOrdersProps {
@@ -42,192 +24,105 @@ interface UserOrdersProps {
 }
 
 const UserOrders = ({ user }: UserOrdersProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const { toast } = useToast();
-  
-  useEffect(() => {
-    if (user) {
-      loadOrders();
-    } else {
-      // For demo purposes, if no user, load mock data
-      loadMockOrders();
+  const [orders, setOrders] = useState<Order[]>([
+    {
+      id: 'order-1',
+      orderNumber: 'ORD-20230615-12345',
+      date: '2023-06-15',
+      status: 'delivered',
+      total: 79.98,
+      items: 2,
+      trackingNumber: 'TRK9876543210',
+      trackingUrl: 'https://www.fedex.com/tracking',
+      estimatedDelivery: '2023-06-18'
+    },
+    {
+      id: 'order-2',
+      orderNumber: 'ORD-20230520-67890',
+      date: '2023-05-20',
+      status: 'shipped',
+      total: 129.99,
+      items: 3,
+      trackingNumber: 'TRK1234567890',
+      trackingUrl: 'https://www.ups.com/tracking',
+      estimatedDelivery: '2023-05-25'
+    },
+    {
+      id: 'order-3',
+      orderNumber: 'ORD-20230505-24680',
+      date: '2023-05-05',
+      status: 'processing',
+      total: 49.99,
+      items: 1
+    },
+    {
+      id: 'order-4',
+      orderNumber: 'ORD-20230410-13579',
+      date: '2023-04-10',
+      status: 'cancelled',
+      total: 34.99,
+      items: 1
     }
-  }, [user]);
+  ]);
   
-  const loadOrders = async () => {
-    if (!user) return;
-    
-    try {
-      setIsLoading(true);
-      
-      // Fetch user orders from Supabase
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        throw error;
-      }
-      
-      if (data) {
-        setOrders(data as unknown as Order[]);
-      }
-    } catch (error) {
-      console.error('Error loading orders:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load orders",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
+  const getStatusIcon = (status: Order['status']) => {
+    switch (status) {
+      case 'processing':
+        return <Clock className="h-5 w-5 text-yellow-500" />;
+      case 'shipped':
+        return <Truck className="h-5 w-5 text-blue-500" />;
+      case 'delivered':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'cancelled':
+        return <AlertCircle className="h-5 w-5 text-red-500" />;
     }
   };
   
-  const loadMockOrders = () => {
-    setTimeout(() => {
-      setOrders([
-        {
-          id: 'order-001',
-          order_number: 'ORD-12345',
-          date: '2023-08-15',
-          status: 'delivered',
-          total: 79.98,
-          items: [
-            {
-              id: 'item-001',
-              name: 'Classic Black Tee',
-              variant: 'Black',
-              size: 'M',
-              quantity: 2,
-              price: 29.99,
-              image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=300'
-            },
-            {
-              id: 'item-002',
-              name: 'Logo Cap',
-              variant: 'Navy',
-              size: 'One Size',
-              quantity: 1,
-              price: 19.99,
-              image: 'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=300'
-            }
-          ],
-          tracking_number: 'TRK12345678',
-          shipping_address: {
-            name: 'John Doe',
-            street: '123 Main St',
-            city: 'New York',
-            state: 'NY',
-            zip: '10001',
-            country: 'United States'
-          }
-        },
-        {
-          id: 'order-002',
-          order_number: 'ORD-67890',
-          date: '2023-07-22',
-          status: 'shipped',
-          total: 89.98,
-          items: [
-            {
-              id: 'item-003',
-              name: 'Premium Hoodie',
-              variant: 'Gray',
-              size: 'L',
-              quantity: 1,
-              price: 59.99,
-              image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=300'
-            },
-            {
-              id: 'item-004',
-              name: 'Basic Tee',
-              variant: 'White',
-              size: 'S',
-              quantity: 1,
-              price: 29.99,
-              image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300'
-            }
-          ],
-          tracking_number: 'TRK87654321',
-          shipping_address: {
-            name: 'John Doe',
-            street: '123 Main St',
-            city: 'New York',
-            state: 'NY',
-            zip: '10001',
-            country: 'United States'
-          }
-        },
-        {
-          id: 'order-003',
-          order_number: 'ORD-54321',
-          date: '2023-06-10',
-          status: 'processing',
-          total: 49.99,
-          items: [
-            {
-              id: 'item-005',
-              name: 'Vintage Cap',
-              variant: 'Black',
-              size: 'One Size',
-              quantity: 1,
-              price: 24.99,
-              image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=300'
-            },
-            {
-              id: 'item-006',
-              name: 'Logo Tee',
-              variant: 'Red',
-              size: 'XL',
-              quantity: 1,
-              price: 24.99,
-              image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=300'
-            }
-          ],
-          shipping_address: {
-            name: 'John Doe',
-            street: '123 Main St',
-            city: 'New York',
-            state: 'NY',
-            zip: '10001',
-            country: 'United States'
-          }
-        }
-      ]);
-      setIsLoading(false);
-    }, 1000);
+  const getStatusText = (status: Order['status']) => {
+    switch (status) {
+      case 'processing':
+        return 'Processing';
+      case 'shipped':
+        return 'Shipped';
+      case 'delivered':
+        return 'Delivered';
+      case 'cancelled':
+        return 'Cancelled';
+    }
   };
   
-  if (isLoading) {
-    return (
-      <div className="flex justify-center p-8">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const getStatusColor = (status: Order['status']) => {
+    switch (status) {
+      case 'processing':
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+      case 'shipped':
+        return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+      case 'delivered':
+        return 'bg-green-500/10 text-green-500 border-green-500/20';
+      case 'cancelled':
+        return 'bg-red-500/10 text-red-500 border-red-500/20';
+    }
+  };
   
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <FadeIn>
         <div>
-          <h2 className="text-2xl font-medium mb-1">Your Orders</h2>
+          <h2 className="text-2xl font-medium mb-1">My Orders</h2>
           <p className="text-sm text-gray-400">View and track your orders</p>
         </div>
       </FadeIn>
       
-      <Separator />
-      
-      <Tabs defaultValue="all">
-        <TabsList className="mb-6">
-          <TabsTrigger value="all">All Orders</TabsTrigger>
-          <TabsTrigger value="processing">Processing</TabsTrigger>
-          <TabsTrigger value="shipped">Shipped</TabsTrigger>
-          <TabsTrigger value="delivered">Delivered</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="all" className="mt-6">
+        <FadeIn delay={100}>
+          <TabsList className="mb-6">
+            <TabsTrigger value="all">All Orders</TabsTrigger>
+            <TabsTrigger value="processing">Processing</TabsTrigger>
+            <TabsTrigger value="shipped">Shipped</TabsTrigger>
+            <TabsTrigger value="delivered">Delivered</TabsTrigger>
+            <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+          </TabsList>
+        </FadeIn>
         
         <TabsContent value="all">
           <OrderList orders={orders} />
@@ -244,6 +139,10 @@ const UserOrders = ({ user }: UserOrdersProps) => {
         <TabsContent value="delivered">
           <OrderList orders={orders.filter(order => order.status === 'delivered')} />
         </TabsContent>
+        
+        <TabsContent value="cancelled">
+          <OrderList orders={orders.filter(order => order.status === 'cancelled')} />
+        </TabsContent>
       </Tabs>
     </div>
   );
@@ -254,164 +153,138 @@ interface OrderListProps {
 }
 
 const OrderList = ({ orders }: OrderListProps) => {
+  const getStatusIcon = (status: Order['status']) => {
+    switch (status) {
+      case 'processing':
+        return <Clock className="h-5 w-5 text-yellow-500" />;
+      case 'shipped':
+        return <Truck className="h-5 w-5 text-blue-500" />;
+      case 'delivered':
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'cancelled':
+        return <AlertCircle className="h-5 w-5 text-red-500" />;
+    }
+  };
+  
+  const getStatusColor = (status: Order['status']) => {
+    switch (status) {
+      case 'processing':
+        return 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20';
+      case 'shipped':
+        return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+      case 'delivered':
+        return 'bg-green-500/10 text-green-500 border-green-500/20';
+      case 'cancelled':
+        return 'bg-red-500/10 text-red-500 border-red-500/20';
+    }
+  };
+  
   if (orders.length === 0) {
     return (
-      <Card className="bg-black/30 border-gray-800">
-        <CardContent className="pt-6 text-center">
-          <PackageOpen className="mx-auto h-12 w-12 text-gray-500 mb-4" />
-          <h3 className="text-lg font-medium mb-2">No orders found</h3>
+      <FadeIn>
+        <div className="text-center py-16 border border-gray-800 rounded-lg">
+          <Package className="h-12 w-12 mx-auto text-gray-500 mb-4" />
+          <h3 className="text-xl font-medium mb-2">No orders found</h3>
           <p className="text-gray-400 mb-6">
             You don't have any orders in this category yet.
           </p>
           <Button asChild>
-            <a href="/shop">Continue Shopping</a>
+            <a href="/shop">Start Shopping</a>
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </FadeIn>
     );
   }
   
   return (
-    <StaggeredChildren staggerDelay={100} className="space-y-6">
-      {orders.map(order => (
-        <OrderCard key={order.id} order={order} />
-      ))}
-    </StaggeredChildren>
-  );
-};
-
-interface OrderCardProps {
-  order: Order;
-}
-
-const OrderCard = ({ order }: OrderCardProps) => {
-  const statusColors = {
-    processing: "bg-amber-900/20 text-amber-500 border-amber-900/50",
-    shipped: "bg-blue-900/20 text-blue-500 border-blue-900/50",
-    delivered: "bg-green-900/20 text-green-500 border-green-900/50",
-    cancelled: "bg-red-900/20 text-red-500 border-red-900/50"
-  };
-  
-  const statusIcons = {
-    processing: <Clock size={16} className="mr-2" />,
-    shipped: <TruckIcon size={16} className="mr-2" />,
-    delivered: <CheckCircle size={16} className="mr-2" />,
-    cancelled: <XCircle size={16} className="mr-2" />
-  };
-  
-  const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
-  
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
-  
-  return (
-    <Card className="bg-black/30 border-gray-800 overflow-hidden hover:border-gray-700 transition-colors">
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <CardTitle className="flex items-center">
-              Order #{order.order_number}
-            </CardTitle>
-            <CardDescription>
-              Placed on {formatDate(order.date)}
-            </CardDescription>
-          </div>
-          <Badge 
-            variant="outline"
-            className={`flex items-center px-3 py-1 ${statusColors[order.status]}`}
-          >
-            {statusIcons[order.status]}
-            <span className="capitalize">{order.status}</span>
-          </Badge>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="grid md:grid-cols-[3fr_1fr] gap-6">
-        <div>
-          <h4 className="text-sm font-medium mb-3">Items ({totalItems})</h4>
-          
-          <div className="space-y-3">
-            {order.items.map(item => (
-              <div key={item.id} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-900 rounded overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.name} 
-                    className="w-full h-full object-cover"
-                  />
+    <FadeIn>
+      <div className="space-y-4">
+        {orders.map((order) => (
+          <div key={order.id} className="border border-gray-800 rounded-lg overflow-hidden">
+            <div className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center mb-2">
+                    <h3 className="text-lg font-medium">{order.orderNumber}</h3>
+                    <Badge 
+                      className={`ml-3 ${getStatusColor(order.status)}`}
+                      variant="outline"
+                    >
+                      <span className="flex items-center">
+                        {getStatusIcon(order.status)}
+                        <span className="ml-1">{order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                      </span>
+                    </Badge>
+                  </div>
+                  
+                  <div className="text-sm text-gray-400 space-y-1">
+                    <p>Order Date: {new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p>{order.items} {order.items === 1 ? 'item' : 'items'} • ${order.total.toFixed(2)}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h5 className="text-sm font-medium truncate">{item.name}</h5>
-                  <p className="text-xs text-gray-400">
-                    {item.variant}, Size: {item.size}, Qty: {item.quantity}
-                  </p>
-                </div>
-                <div className="text-sm font-medium">
-                  ${(item.price * item.quantity).toFixed(2)}
+                
+                <div className="flex items-center space-x-3">
+                  <Button asChild variant="outline" size="sm">
+                    <a href={`/account/orders/${order.id}`}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      Order Details
+                    </a>
+                  </Button>
+                  
+                  {(order.status === 'shipped' || order.status === 'delivered') && (
+                    <Button asChild size="sm">
+                      <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer">
+                        <Truck className="h-4 w-4 mr-2" />
+                        Track Order
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-          
-          {order.status === 'shipped' && order.tracking_number && (
-            <div className="mt-4 text-sm">
-              <p className="font-medium">Tracking Number:</p>
-              <div className="flex items-center mt-1">
-                <code className="px-2 py-1 bg-gray-800 rounded">{order.tracking_number}</code>
-                <Button variant="ghost" size="sm" className="h-8 ml-2 text-primary">
-                  Track
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="space-y-6">
-          <div>
-            <h4 className="text-sm font-medium mb-2">Order Summary</h4>
-            <div className="text-sm space-y-1">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Subtotal</span>
-                <span>${order.total.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Shipping</span>
-                <span>Free</span>
-              </div>
-              <Separator className="my-2" />
-              <div className="flex justify-between font-medium">
-                <span>Total</span>
-                <span>${order.total.toFixed(2)}</span>
-              </div>
+              
+              {(order.status === 'shipped' || order.status === 'delivered') && (
+                <div className="mt-4 pt-4 border-t border-gray-800">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="sm:w-1/2">
+                      <h4 className="text-sm font-medium mb-1">Tracking Information</h4>
+                      <p className="text-sm text-gray-400">Tracking Number: {order.trackingNumber}</p>
+                      {order.estimatedDelivery && (
+                        <p className="text-sm text-gray-400 mt-1">
+                          Estimated Delivery: {new Date(order.estimatedDelivery).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="sm:w-1/2">
+                      <h4 className="text-sm font-medium mb-2">Shipping Progress</h4>
+                      <div className="relative">
+                        <div className="absolute top-1.5 left-0 w-full h-1 bg-gray-800 rounded-full"></div>
+                        <div className={`absolute top-1.5 left-0 h-1 rounded-full ${order.status === 'delivered' ? 'w-full bg-green-500' : 'w-2/3 bg-blue-500'}`}></div>
+                        
+                        <div className="relative flex justify-between">
+                          <div className="flex flex-col items-center">
+                            <div className="w-4 h-4 rounded-full bg-primary"></div>
+                            <span className="text-xs mt-1">Processed</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <div className="w-4 h-4 rounded-full bg-primary"></div>
+                            <span className="text-xs mt-1">Shipped</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <div className={`w-4 h-4 rounded-full ${order.status === 'delivered' ? 'bg-primary' : 'bg-gray-800'}`}></div>
+                            <span className={`text-xs mt-1 ${order.status === 'delivered' ? 'text-white' : 'text-gray-500'}`}>Delivered</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          
-          <div>
-            <h4 className="text-sm font-medium mb-2">Shipping Address</h4>
-            <address className="text-sm not-italic text-gray-400 space-y-1">
-              <p>{order.shipping_address.name}</p>
-              <p>{order.shipping_address.street}</p>
-              <p>
-                {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.zip}
-              </p>
-              <p>{order.shipping_address.country}</p>
-            </address>
-          </div>
-        </div>
-      </CardContent>
-      
-      <div className="px-6 py-4 bg-gray-900/30 border-t border-gray-800 flex justify-between">
-        <Button variant="outline" size="sm">
-          Contact Support
-        </Button>
-        <Button size="sm" className="flex items-center">
-          Order Details
-          <ChevronRight size={16} className="ml-1" />
-        </Button>
+        ))}
       </div>
-    </Card>
+    </FadeIn>
   );
 };
 

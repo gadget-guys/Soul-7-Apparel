@@ -10,6 +10,7 @@ import Tees from './pages/Tees';
 import Hoodies from './pages/Hoodies';
 import Shop from './pages/Shop';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 import NotFound from './pages/NotFound';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -18,6 +19,7 @@ import UserProfile from './pages/account/UserProfile';
 import UserSettings from './pages/account/UserSettings';
 import UserOrders from './pages/account/UserOrders';
 import UserBilling from './pages/account/UserBilling';
+import UserWishlist from './pages/account/UserWishlist';
 import AdminPortal from './pages/account/AdminPortal';
 import MiniCart from './components/cart/MiniCart';
 
@@ -34,6 +36,7 @@ function App() {
         <Route path="/mens/hoodies" element={<Hoodies />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/account" element={<AccountPage />} />
@@ -41,6 +44,7 @@ function App() {
         <Route path="/account/settings" element={<UserSettings user={null} />} />
         <Route path="/account/orders" element={<UserOrders user={null} />} />
         <Route path="/account/billing" element={<UserBilling user={null} />} />
+        <Route path="/account/wishlist" element={<UserWishlist user={null} />} />
         <Route path="/account/admin" element={<AdminPortal />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
