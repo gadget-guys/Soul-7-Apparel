@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/lib/supabase';
+import { getPaymentGateways, updatePaymentGateways } from '@/lib/payment';
 
 interface ApiKeys {
   openai_api_key?: string;
@@ -49,12 +50,7 @@ const AdminPortal = () => {
         }
 
         // Fetch payment gateway settings
-        const { data: paymentData, error: paymentError } = await supabase
-          .from('payment_gateways')
-          .select('*')
-          .single();
-          
-        if (paymentError && paymentError.code !== 'PGRST116') throw paymentError;
+        const paymentData = await getPaymentGateways();
         
         if (paymentData) {
           setPaymentGateways({
@@ -68,13 +64,18 @@ const AdminPortal = () => {
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
+        toast({
+          title: "Error loading settings",
+          description: "There was a problem loading your settings. Please try again.",
+          variant: "destructive"
+        });
       } finally {
         setLoading(false);
       }
     };
     
     fetchSettings();
-  }, []);
+  }, [toast]);
 
   const handleSaveApiKeys = async () => {
     setSaving(true);
@@ -109,15 +110,9 @@ const AdminPortal = () => {
     setSaving(true);
     
     try {
-      const { error } = await supabase
-        .from('payment_gateways')
-        .upsert({
-          id: 1,  // Using a fixed ID for single record
-          ...paymentGateways,
-          updated_at: new Date()
-        });
-        
-      if (error) throw error;
+      const success = await updatePaymentGateways(paymentGateways);
+      
+      if (!success) throw new Error("Failed to update payment settings");
       
       toast({
         title: "Payment settings saved",

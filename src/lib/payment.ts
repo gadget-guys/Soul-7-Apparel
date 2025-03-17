@@ -27,6 +27,25 @@ export const getPaymentGateways = async (): Promise<PaymentGateways | null> => {
   }
 };
 
+// Update payment gateway settings in Supabase
+export const updatePaymentGateways = async (settings: Partial<PaymentGateways>): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('payment_gateways')
+      .upsert({
+        id: 1, // Using a fixed ID for single record
+        ...settings,
+        updated_at: new Date()
+      });
+      
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Error updating payment gateways:', error);
+    return false;
+  }
+};
+
 // Check if Stripe is configured and enabled
 export const isStripeAvailable = async (): Promise<boolean> => {
   const paymentGateways = await getPaymentGateways();
