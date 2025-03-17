@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Index from './pages/Index';
 import TeeDetail from './pages/TeeDetail';
@@ -41,8 +41,12 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        
+        {/* Auth routes */}
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
+        
+        {/* Account routes */}
         <Route path="/account" element={<AccountPage />} />
         <Route path="/account/profile" element={<UserProfile user={null} />} />
         <Route path="/account/settings" element={<UserSettings user={null} />} />
@@ -50,6 +54,14 @@ function App() {
         <Route path="/account/billing" element={<UserBilling user={null} />} />
         <Route path="/account/wishlist" element={<UserWishlist user={null} />} />
         <Route path="/account/admin" element={<AdminPortal />} />
+        
+        {/* Redirects for legacy/incorrect routes */}
+        <Route path="/product/tee-:id" element={<Navigate to="/tee/:id" replace />} />
+        <Route path="/product/hat-:id" element={<Navigate to="/hat/:id" replace />} />
+        <Route path="/product/hoodie-:id" element={<Navigate to="/hoodie/:id" replace />} />
+        <Route path="/account/login" element={<Navigate to="/auth/login" replace />} />
+        
+        {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <MiniCart />
