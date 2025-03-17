@@ -1,34 +1,70 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ShoppingCart, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getAvailablePaymentMethods } from '@/lib/payment';
+import { useCart, CartItem } from '@/hooks/useCart';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddToCartButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
+  productId: string;
+  name: string;
+  price: number;
+  discountPrice?: number;
+  image: string;
+  color: string;
+  size: string;
+  variantId: string;
+  quantity: number;
+  disabled?: boolean;
 }
 
-const AddToCartButton = ({ onClick }: AddToCartButtonProps) => {
+const AddToCartButton = ({ 
+  onClick, 
+  productId,
+  name,
+  price,
+  discountPrice,
+  image,
+  color,
+  size,
+  variantId,
+  quantity,
+  disabled = false
+}: AddToCartButtonProps) => {
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
-  
-  useEffect(() => {
-    // Load available payment methods when component mounts
-    const loadPaymentMethods = async () => {
-      const methods = await getAvailablePaymentMethods();
-      setPaymentMethods(methods);
-      
-      // Log available payment methods for debugging
-      console.log('Available payment methods:', methods);
-    };
-    
-    loadPaymentMethods();
-  }, []);
+  const { addToCart, openCart } = useCart();
   
   const handleClick = () => {
+    if (disabled) return;
+    
     setIsAddedToCart(true);
-    onClick();
+    
+    // Create a new cart item
+    const item: CartItem = {
+      id: uuidv4(),
+      productId,
+      name,
+      price,
+      discountPrice,
+      quantity,
+      image,
+      color,
+      size,
+      variantId
+    };
+    
+    // Add the item to the cart
+    addToCart(item);
+    
+    // Open the mini cart
+    openCart();
+    
+    // Call the onClick handler if provided
+    if (onClick) onClick();
     
     // Reset the added to cart state after animation completes
     setTimeout(() => {
@@ -43,6 +79,7 @@ const AddToCartButton = ({ onClick }: AddToCartButtonProps) => {
         "flex-1 flex items-center justify-center space-x-2 h-11",
         isAddedToCart && "add-to-cart-animation"
       )}
+      disabled={disabled}
     >
       <ShoppingCart size={18} />
       <span>{isAddedToCart ? "Added to Cart!" : "Add to Cart"}</span>

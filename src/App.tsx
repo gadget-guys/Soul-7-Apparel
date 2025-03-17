@@ -8,6 +8,8 @@ import HoodieDetail from './pages/HoodieDetail';
 import Hats from './pages/Hats';
 import Tees from './pages/Tees';
 import Hoodies from './pages/Hoodies';
+import Shop from './pages/Shop';
+import Cart from './pages/Cart';
 import NotFound from './pages/NotFound';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -17,6 +19,7 @@ import UserSettings from './pages/account/UserSettings';
 import UserOrders from './pages/account/UserOrders';
 import UserBilling from './pages/account/UserBilling';
 import AdminPortal from './pages/account/AdminPortal';
+import MiniCart from './components/cart/MiniCart';
 
 function App() {
   return (
@@ -29,16 +32,19 @@ function App() {
         <Route path="/mens/tees" element={<Tees />} />
         <Route path="/mens/hats" element={<Hats />} />
         <Route path="/mens/hoodies" element={<Hoodies />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/account" element={<AccountPage />} />
-        <Route path="/account/profile" element={<UserProfile />} />
-        <Route path="/account/settings" element={<UserSettings />} />
-        <Route path="/account/orders" element={<UserOrders />} />
-        <Route path="/account/billing" element={<UserBilling />} />
+        <Route path="/account/profile" element={<UserProfile user={null} />} />
+        <Route path="/account/settings" element={<UserSettings user={null} />} />
+        <Route path="/account/orders" element={<UserOrders user={null} />} />
+        <Route path="/account/billing" element={<UserBilling user={null} />} />
         <Route path="/account/admin" element={<AdminPortal />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <MiniCart />
     </BrowserRouter>
   );
 }

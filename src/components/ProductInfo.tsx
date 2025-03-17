@@ -10,6 +10,7 @@ import QuantitySelector from '@/components/product/QuantitySelector';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import ShippingInfo from '@/components/product/ShippingInfo';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ProductInfoProps {
   product: Product;
@@ -21,9 +22,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     product.variants[0]?.sizes[0] || null
   );
   const [quantity, setQuantity] = useState(1);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { toast } = useToast();
   
   const handleAddToCart = () => {
-    // Add to cart logic would go here
     console.log('Added to cart:', {
       product: product.name,
       variant: selectedVariant.color,
@@ -42,6 +44,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     setSelectedSize(size);
   };
   
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    toast({
+      title: isFavorite ? "Removed from wishlist" : "Added to wishlist",
+      description: `${product.name} has been ${isFavorite ? "removed from" : "added to"} your wishlist.`,
+    });
+  };
+  
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: product.currency,
@@ -57,6 +67,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const discountPercentage = product.discountPrice 
     ? Math.round(100 - (product.discountPrice / product.price) * 100)
     : null;
+
+  // Get the primary image for the selected variant
+  const variantImage = selectedVariant?.images?.[0] || product.images[0];
+  
+  const isAddToCartDisabled = !selectedSize || !selectedSize.inStock;
 
   return (
     <div className="space-y-6">
@@ -142,17 +157,48 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               onChange={setQuantity} 
             />
             
-            <AddToCartButton onClick={handleAddToCart} />
+            <AddToCartButton 
+              onClick={handleAddToCart}
+              productId={product.id}
+              name={product.name}
+              price={product.price}
+              discountPrice={product.discountPrice}
+              image={variantImage}
+              color={selectedVariant.color}
+              size={selectedSize?.size || ''}
+              variantId={selectedVariant.id}
+              quantity={quantity}
+              disabled={isAddToCartDisabled}
+            />
             
             <Button 
               variant="outline" 
               size="icon" 
-              className="h-11 w-11"
+              className={cn(
+                "h-11 w-11 transition-colors",
+                isFavorite && "bg-red-950/20 border-red-800 text-red-500"
+              )}
               aria-label="Add to wishlist"
+              onClick={toggleFavorite}
             >
-              <Heart size={18} />
+              <Heart 
+                size={18} 
+                fill={isFavorite ? "currentColor" : "none"}
+              />
             </Button>
           </div>
+          
+          {isAddToCartDisabled && selectedSize && (
+            <p className="text-red-500 text-sm mt-2">
+              This size is currently out of stock.
+            </p>
+          )}
+          
+          {!selectedSize && (
+            <p className="text-amber-500 text-sm mt-2">
+              Please select a size.
+            </p>
+          )}
         </ScaleIn>
         
         <FadeIn delay={800}>

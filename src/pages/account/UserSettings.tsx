@@ -1,230 +1,304 @@
 
-import { useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { FadeIn } from '@/components/ui/transitions';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Bell, Mail, ShieldAlert, Eye, Globe } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabase';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Bell, Shield, Globe, Moon } from 'lucide-react';
+import { User } from '@supabase/supabase-js';
 
 interface UserSettingsProps {
   user: User | null;
 }
 
-interface UserPreferences {
-  id?: string;
-  email_notifications: boolean;
-  marketing_emails: boolean;
-  dark_mode: boolean;
-  two_factor_auth: boolean;
-  language: string;
-}
-
 const UserSettings = ({ user }: UserSettingsProps) => {
-  const [preferences, setPreferences] = useState<UserPreferences>({
-    email_notifications: true,
-    marketing_emails: false,
-    dark_mode: false,
-    two_factor_auth: false,
-    language: 'en'
+  const [isLoading, setIsLoading] = useState(false);
+  const [settings, setSettings] = useState({
+    emailNotifications: true,
+    orderUpdates: true,
+    promotions: false,
+    newProducts: true,
+    newFeatures: true,
+    theme: 'dark',
+    language: 'en',
+    currency: 'USD',
   });
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  
   const { toast } = useToast();
-
-  useEffect(() => {
-    const fetchPreferences = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from('user_preferences')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
-
-        if (!error && data) {
-          setPreferences({
-            id: data.id,
-            email_notifications: data.email_notifications,
-            marketing_emails: data.marketing_emails,
-            dark_mode: data.dark_mode,
-            two_factor_auth: data.two_factor_auth,
-            language: data.language
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching preferences:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPreferences();
-  }, [user]);
-
-  const handleToggle = (field: keyof UserPreferences, value: boolean) => {
-    setPreferences(prev => ({
-      ...prev,
-      [field]: value
-    }));
+  
+  const toggleSetting = (key: keyof typeof settings) => {
+    if (typeof settings[key] === 'boolean') {
+      setSettings({
+        ...settings,
+        [key]: !settings[key],
+      });
+    }
   };
-
-  const handleLanguageChange = (value: string) => {
-    setPreferences(prev => ({
-      ...prev,
-      language: value
-    }));
+  
+  const updateSetting = (key: keyof typeof settings, value: string) => {
+    setSettings({
+      ...settings,
+      [key]: value,
+    });
   };
-
-  const handleSaveSettings = async () => {
+  
+  const saveSettings = async () => {
     if (!user) return;
     
-    setSaving(true);
-    
     try {
+      setIsLoading(true);
+      
+      // Save to supabase
       const { error } = await supabase
-        .from('user_preferences')
+        .from('user_settings')
         .upsert({
           user_id: user.id,
-          ...preferences,
-          updated_at: new Date()
+          settings: settings,
+          updated_at: new Date().toISOString(),
         });
-        
+      
       if (error) throw error;
       
       toast({
         title: "Settings saved",
-        description: "Your preferences have been updated successfully."
+        description: "Your preferences have been updated successfully"
       });
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error saving settings:', error);
       toast({
-        title: "Error saving settings",
-        description: error.message || "There was an error saving your settings.",
+        title: "Error",
+        description: "Failed to save settings",
         variant: "destructive"
       });
     } finally {
-      setSaving(false);
+      setIsLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="bg-gray-900 p-6 rounded-lg flex justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5 text-primary" />
-            Notification Settings
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium">Email Notifications</h3>
-              <p className="text-xs text-gray-400">Receive order updates and account notifications</p>
-            </div>
-            <Switch 
-              checked={preferences.email_notifications}
-              onCheckedChange={(checked) => handleToggle('email_notifications', checked)}
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium">Marketing Emails</h3>
-              <p className="text-xs text-gray-400">Receive promotions, discounts, and product updates</p>
-            </div>
-            <Switch 
-              checked={preferences.marketing_emails}
-              onCheckedChange={(checked) => handleToggle('marketing_emails', checked)}
-            />
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-8">
+      <FadeIn>
+        <div>
+          <h2 className="text-2xl font-medium mb-1">Settings</h2>
+          <p className="text-sm text-gray-400">Manage your account settings and preferences</p>
+        </div>
+      </FadeIn>
       
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" />
-            Security Settings
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+      <Separator />
+      
+      <FadeIn delay={100}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <Bell className="w-5 h-5 text-primary" />
             <div>
-              <h3 className="text-sm font-medium">Two-Factor Authentication</h3>
-              <p className="text-xs text-gray-400">Add an extra layer of security to your account</p>
+              <CardTitle>Notifications</CardTitle>
+              <CardDescription>Manage how you receive notifications</CardDescription>
             </div>
-            <Switch 
-              checked={preferences.two_factor_auth}
-              onCheckedChange={(checked) => handleToggle('two_factor_auth', checked)}
-            />
-          </div>
-          
-          <div className="pt-2">
-            <Button variant="outline" size="sm">
-              Change Password
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="emailNotifications">Email Notifications</Label>
+                <p className="text-sm text-gray-500">Receive all notifications via email</p>
+              </div>
+              <Switch 
+                id="emailNotifications"
+                checked={settings.emailNotifications}
+                onCheckedChange={() => toggleSetting('emailNotifications')}
+              />
+            </div>
+            
+            <Separator />
+            
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium">Email preferences</h4>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="orderUpdates">Order Updates</Label>
+                  <p className="text-sm text-gray-500">Get notified about your order status</p>
+                </div>
+                <Switch 
+                  id="orderUpdates"
+                  checked={settings.orderUpdates}
+                  onCheckedChange={() => toggleSetting('orderUpdates')}
+                  disabled={!settings.emailNotifications}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="promotions">Promotions</Label>
+                  <p className="text-sm text-gray-500">Receive offers and discount codes</p>
+                </div>
+                <Switch 
+                  id="promotions"
+                  checked={settings.promotions}
+                  onCheckedChange={() => toggleSetting('promotions')}
+                  disabled={!settings.emailNotifications}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="newProducts">New Products</Label>
+                  <p className="text-sm text-gray-500">Be the first to know about new arrivals</p>
+                </div>
+                <Switch 
+                  id="newProducts"
+                  checked={settings.newProducts}
+                  onCheckedChange={() => toggleSetting('newProducts')}
+                  disabled={!settings.emailNotifications}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="newFeatures">New Features</Label>
+                  <p className="text-sm text-gray-500">Learn about new features and updates</p>
+                </div>
+                <Switch 
+                  id="newFeatures"
+                  checked={settings.newFeatures}
+                  onCheckedChange={() => toggleSetting('newFeatures')}
+                  disabled={!settings.emailNotifications}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </FadeIn>
+      
+      <FadeIn delay={200}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <Globe className="w-5 h-5 text-primary" />
+            <div>
+              <CardTitle>Preferences</CardTitle>
+              <CardDescription>Customize your shopping experience</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-2">
+                <Label htmlFor="language">Language</Label>
+                <Select
+                  value={settings.language}
+                  onValueChange={(value) => updateSetting('language', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="es">Spanish</SelectItem>
+                    <SelectItem value="fr">French</SelectItem>
+                    <SelectItem value="de">German</SelectItem>
+                    <SelectItem value="jp">Japanese</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="currency">Currency</Label>
+                <Select
+                  value={settings.currency}
+                  onValueChange={(value) => updateSetting('currency', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD ($)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="CAD">CAD ($)</SelectItem>
+                    <SelectItem value="AUD">AUD ($)</SelectItem>
+                    <SelectItem value="JPY">JPY (¥)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="theme">Theme</Label>
+                <Select
+                  value={settings.theme}
+                  onValueChange={(value) => updateSetting('theme', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select theme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dark">Dark</SelectItem>
+                    <SelectItem value="light">Light</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={saveSettings} disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save Preferences"}
             </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardFooter>
+        </Card>
+      </FadeIn>
       
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5 text-primary" />
-            Display Settings
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+      <FadeIn delay={300}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader className="flex flex-row items-center gap-4">
+            <ShieldAlert className="w-5 h-5 text-primary" />
             <div>
-              <h3 className="text-sm font-medium">Dark Mode</h3>
-              <p className="text-xs text-gray-400">Toggle dark mode for the application</p>
+              <CardTitle>Privacy & Security</CardTitle>
+              <CardDescription>Manage your account security settings</CardDescription>
             </div>
-            <Switch 
-              checked={preferences.dark_mode}
-              onCheckedChange={(checked) => handleToggle('dark_mode', checked)}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium">Language</h3>
-            <select 
-              value={preferences.language}
-              onChange={(e) => handleLanguageChange(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-sm"
-            >
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
-              <option value="ja">Japanese</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Button 
-        onClick={handleSaveSettings} 
-        disabled={saving || !user}
-        className="w-full"
-      >
-        {saving ? "Saving..." : "Save Settings"}
-      </Button>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Two-Factor Authentication</Label>
+                <p className="text-sm text-gray-500">Protect your account with an additional security layer</p>
+              </div>
+              <Button variant="outline">Set Up</Button>
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Change Password</Label>
+                <p className="text-sm text-gray-500">Update your password regularly for better security</p>
+              </div>
+              <Button variant="outline">Change</Button>
+            </div>
+            
+            <Separator />
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Account Data</Label>
+                <p className="text-sm text-gray-500">Download or delete your personal data</p>
+              </div>
+              <div className="space-x-2">
+                <Button variant="outline" size="sm">Download</Button>
+                <Button variant="destructive" size="sm">Delete</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </FadeIn>
     </div>
   );
 };

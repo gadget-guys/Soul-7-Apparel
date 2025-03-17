@@ -1,758 +1,658 @@
 
-import { useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { FadeIn } from '@/components/ui/transitions';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle,
+  CardFooter
+} from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { 
+  CreditCard, 
+  Trash2, 
+  PlusCircle, 
+  MapPin, 
+  Check, 
+  Edit
+} from 'lucide-react';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabase';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { CreditCard, PlusCircle, Edit, Trash2, Check, AlertCircle } from 'lucide-react';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getAvailablePaymentMethods } from '@/lib/payment';
-
-interface UserBillingProps {
-  user: User | null;
-}
+import { User } from '@supabase/supabase-js';
 
 interface PaymentMethod {
   id: string;
   type: 'card' | 'paypal';
-  last_four?: string;
-  expiry_date?: string;
-  card_type?: string;
-  paypal_email?: string;
-  is_default: boolean;
+  isDefault: boolean;
+  details: {
+    last4?: string;
+    brand?: string;
+    expMonth?: number;
+    expYear?: number;
+    email?: string;
+  };
 }
 
-interface BillingAddress {
+interface Address {
   id: string;
+  name: string;
   street: string;
   city: string;
   state: string;
   zip: string;
   country: string;
-  is_default: boolean;
+  isDefault: boolean;
+}
+
+interface UserBillingProps {
+  user: User | null;
 }
 
 const UserBilling = ({ user }: UserBillingProps) => {
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [billingAddresses, setBillingAddresses] = useState<BillingAddress[]>([]);
-  const [availablePaymentOptions, setAvailablePaymentOptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [addressFormOpen, setAddressFormOpen] = useState(false);
-  const [paymentFormOpen, setPaymentFormOpen] = useState(false);
-  const { toast } = useToast();
-
-  const [newAddress, setNewAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: 'US',
-    is_default: false
-  });
-
-  const [newPaymentMethod, setNewPaymentMethod] = useState({
-    type: 'card',
-    card_number: '',
-    expiry_date: '',
-    cvv: '',
-    name_on_card: '',
-    paypal_email: '',
-    is_default: false
-  });
-
-  useEffect(() => {
-    const fetchBillingInfo = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([
+    {
+      id: 'pm-1',
+      type: 'card',
+      isDefault: true,
+      details: {
+        last4: '4242',
+        brand: 'visa',
+        expMonth: 12,
+        expYear: 2025
       }
-
-      try {
-        // Fetch payment methods
-        const { data: paymentData, error: paymentError } = await supabase
-          .from('payment_methods')
-          .select('*')
-          .eq('user_id', user.id);
-
-        if (paymentError) throw paymentError;
-        setPaymentMethods(paymentData || []);
-
-        // Fetch billing addresses
-        const { data: addressData, error: addressError } = await supabase
-          .from('billing_addresses')
-          .select('*')
-          .eq('user_id', user.id);
-
-        if (addressError) throw addressError;
-        setBillingAddresses(addressData || []);
-
-        // Get available payment methods from the system
-        const availableMethods = await getAvailablePaymentMethods();
-        setAvailablePaymentOptions(availableMethods);
-      } catch (error) {
-        console.error('Error fetching billing info:', error);
-        toast({
-          title: "Error loading billing information",
-          description: "Unable to load your billing details. Please try again later.",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
+    },
+    {
+      id: 'pm-2',
+      type: 'paypal',
+      isDefault: false,
+      details: {
+        email: 'john.doe@example.com'
+      }
+    }
+  ]);
+  
+  const [addresses, setAddresses] = useState<Address[]>([
+    {
+      id: 'addr-1',
+      name: 'John Doe',
+      street: '123 Main St',
+      city: 'New York',
+      state: 'NY',
+      zip: '10001',
+      country: 'United States',
+      isDefault: true
+    },
+    {
+      id: 'addr-2',
+      name: 'John Doe',
+      street: '456 Park Ave',
+      city: 'Los Angeles',
+      state: 'CA',
+      zip: '90001',
+      country: 'United States',
+      isDefault: false
+    }
+  ]);
+  
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
+    paymentMethods.find(pm => pm.isDefault)?.id || ''
+  );
+  
+  const [isAddingCard, setIsAddingCard] = useState(false);
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState<string | null>(null);
+  
+  const { toast } = useToast();
+  
+  const handleSetDefaultPayment = (id: string) => {
+    setPaymentMethods(
+      paymentMethods.map(pm => ({
+        ...pm,
+        isDefault: pm.id === id
+      }))
+    );
+    
+    toast({
+      title: "Default payment method updated",
+      description: "Your default payment method has been updated successfully"
+    });
+  };
+  
+  const handleRemovePayment = (id: string) => {
+    setPaymentMethods(paymentMethods.filter(pm => pm.id !== id));
+    
+    toast({
+      title: "Payment method removed",
+      description: "Your payment method has been removed successfully"
+    });
+  };
+  
+  const handleSetDefaultAddress = (id: string) => {
+    setAddresses(
+      addresses.map(addr => ({
+        ...addr,
+        isDefault: addr.id === id
+      }))
+    );
+    
+    toast({
+      title: "Default address updated",
+      description: "Your default address has been updated successfully"
+    });
+  };
+  
+  const handleRemoveAddress = (id: string) => {
+    setAddresses(addresses.filter(addr => addr.id !== id));
+    
+    toast({
+      title: "Address removed",
+      description: "Your address has been removed successfully"
+    });
+  };
+  
+  const handleAddCard = () => {
+    // In a real app, this would integrate with Stripe or another payment processor
+    const newCard: PaymentMethod = {
+      id: `pm-${paymentMethods.length + 1}`,
+      type: 'card',
+      isDefault: false,
+      details: {
+        last4: '1234',
+        brand: 'mastercard',
+        expMonth: 9,
+        expYear: 2026
       }
     };
-
-    fetchBillingInfo();
-  }, [user, toast]);
-
-  const handleAddAddress = async () => {
-    if (!user) return;
     
-    try {
-      const { data, error } = await supabase
-        .from('billing_addresses')
-        .insert({
-          user_id: user.id,
-          ...newAddress,
-          created_at: new Date()
-        })
-        .select();
-        
-      if (error) throw error;
-      
-      if (newAddress.is_default) {
-        // Update other addresses to non-default
-        const updatedAddresses = billingAddresses.map(address => ({
-          ...address,
-          is_default: false
-        }));
-        
-        setBillingAddresses([...updatedAddresses, data[0]]);
-      } else {
-        setBillingAddresses([...billingAddresses, data[0]]);
-      }
-      
-      setAddressFormOpen(false);
-      setNewAddress({
-        street: '',
-        city: '',
-        state: '',
-        zip: '',
-        country: 'US',
-        is_default: false
-      });
-      
-      toast({
-        title: "Address added",
-        description: "Your billing address has been added successfully."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error adding address",
-        description: error.message || "There was an error adding your address.",
-        variant: "destructive"
-      });
+    setPaymentMethods([...paymentMethods, newCard]);
+    setIsAddingCard(false);
+    
+    toast({
+      title: "Card added",
+      description: "Your card has been added successfully"
+    });
+  };
+  
+  const getBrandLogo = (brand?: string) => {
+    switch (brand?.toLowerCase()) {
+      case 'visa':
+        return '💳 Visa';
+      case 'mastercard':
+        return '💳 Mastercard';
+      case 'amex':
+        return '💳 Amex';
+      case 'discover':
+        return '💳 Discover';
+      default:
+        return '💳 Card';
     }
   };
-
-  const handleAddPaymentMethod = async () => {
-    if (!user) return;
-    
-    try {
-      // In a real implementation, you would integrate with Stripe or PayPal API
-      // This is a simplified example
-      
-      let paymentData: Partial<PaymentMethod> = {
-        type: newPaymentMethod.type,
-        is_default: newPaymentMethod.is_default
-      };
-      
-      if (newPaymentMethod.type === 'card') {
-        paymentData = {
-          ...paymentData,
-          last_four: newPaymentMethod.card_number.slice(-4),
-          expiry_date: newPaymentMethod.expiry_date,
-          card_type: getCardType(newPaymentMethod.card_number)
-        };
-      } else if (newPaymentMethod.type === 'paypal') {
-        paymentData = {
-          ...paymentData,
-          paypal_email: newPaymentMethod.paypal_email
-        };
-      }
-      
-      const { data, error } = await supabase
-        .from('payment_methods')
-        .insert({
-          user_id: user.id,
-          ...paymentData,
-          created_at: new Date()
-        })
-        .select();
-        
-      if (error) throw error;
-      
-      if (newPaymentMethod.is_default) {
-        // Update other payment methods to non-default
-        const updatedMethods = paymentMethods.map(method => ({
-          ...method,
-          is_default: false
-        }));
-        
-        setPaymentMethods([...updatedMethods, data[0]]);
-      } else {
-        setPaymentMethods([...paymentMethods, data[0]]);
-      }
-      
-      setPaymentFormOpen(false);
-      setNewPaymentMethod({
-        type: 'card',
-        card_number: '',
-        expiry_date: '',
-        cvv: '',
-        name_on_card: '',
-        paypal_email: '',
-        is_default: false
-      });
-      
-      toast({
-        title: "Payment method added",
-        description: "Your payment method has been added successfully."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error adding payment method",
-        description: error.message || "There was an error adding your payment method.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleMakeDefaultPayment = async (id: string) => {
-    if (!user) return;
-    
-    try {
-      // Update the selected payment method
-      await supabase
-        .from('payment_methods')
-        .update({ is_default: true })
-        .eq('id', id);
-        
-      // Update all other payment methods to non-default
-      await supabase
-        .from('payment_methods')
-        .update({ is_default: false })
-        .neq('id', id)
-        .eq('user_id', user.id);
-        
-      // Update local state
-      const updatedMethods = paymentMethods.map(method => ({
-        ...method,
-        is_default: method.id === id
-      }));
-      
-      setPaymentMethods(updatedMethods);
-      
-      toast({
-        title: "Default payment updated",
-        description: "Your default payment method has been updated."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error updating default payment",
-        description: error.message || "There was an error updating your default payment method.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleMakeDefaultAddress = async (id: string) => {
-    if (!user) return;
-    
-    try {
-      // Update the selected address
-      await supabase
-        .from('billing_addresses')
-        .update({ is_default: true })
-        .eq('id', id);
-        
-      // Update all other addresses to non-default
-      await supabase
-        .from('billing_addresses')
-        .update({ is_default: false })
-        .neq('id', id)
-        .eq('user_id', user.id);
-        
-      // Update local state
-      const updatedAddresses = billingAddresses.map(address => ({
-        ...address,
-        is_default: address.id === id
-      }));
-      
-      setBillingAddresses(updatedAddresses);
-      
-      toast({
-        title: "Default address updated",
-        description: "Your default billing address has been updated."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error updating default address",
-        description: error.message || "There was an error updating your default address.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleDeletePaymentMethod = async (id: string) => {
-    if (!user) return;
-    
-    try {
-      await supabase
-        .from('payment_methods')
-        .delete()
-        .eq('id', id);
-        
-      // Update local state
-      setPaymentMethods(paymentMethods.filter(method => method.id !== id));
-      
-      toast({
-        title: "Payment method removed",
-        description: "Your payment method has been removed successfully."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error removing payment method",
-        description: error.message || "There was an error removing your payment method.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleDeleteAddress = async (id: string) => {
-    if (!user) return;
-    
-    try {
-      await supabase
-        .from('billing_addresses')
-        .delete()
-        .eq('id', id);
-        
-      // Update local state
-      setBillingAddresses(billingAddresses.filter(address => address.id !== id));
-      
-      toast({
-        title: "Address removed",
-        description: "Your billing address has been removed successfully."
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error removing address",
-        description: error.message || "There was an error removing your address.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  // Helper function to determine card type from number
-  const getCardType = (cardNumber: string) => {
-    const firstDigit = cardNumber.charAt(0);
-    const firstTwoDigits = parseInt(cardNumber.substring(0, 2));
-    
-    if (firstDigit === '4') return 'Visa';
-    if (firstTwoDigits >= 51 && firstTwoDigits <= 55) return 'Mastercard';
-    if (firstTwoDigits === 34 || firstTwoDigits === 37) return 'Amex';
-    if (firstTwoDigits === 65 || firstTwoDigits === 62) return 'Discover';
-    return 'Unknown';
-  };
-
-  if (loading) {
-    return (
-      <div className="bg-gray-900 p-6 rounded-lg flex justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="space-y-6">
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5 text-primary" />
-            Payment Methods
-          </CardTitle>
-          <Dialog open={paymentFormOpen} onOpenChange={setPaymentFormOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <PlusCircle className="h-4 w-4" />
-                Add Payment Method
+    <div className="space-y-8">
+      <FadeIn>
+        <div>
+          <h2 className="text-2xl font-medium mb-1">Billing</h2>
+          <p className="text-sm text-gray-400">Manage your payment methods and addresses</p>
+        </div>
+      </FadeIn>
+      
+      <Separator />
+      
+      <FadeIn delay={100}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center">
+                  <CreditCard className="mr-2 h-5 w-5 text-primary" />
+                  Payment Methods
+                </CardTitle>
+                <CardDescription>
+                  Manage your payment options
+                </CardDescription>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIsAddingCard(!isAddingCard)}
+              >
+                {isAddingCard ? "Cancel" : "Add Method"}
               </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-800 text-white">
-              <DialogHeader>
-                <DialogTitle>Add Payment Method</DialogTitle>
-              </DialogHeader>
-              
-              <div className="mt-4 space-y-4">
-                {availablePaymentOptions.length === 0 ? (
-                  <div className="p-4 bg-orange-950/30 border border-orange-800/50 rounded-md flex items-start gap-2">
-                    <AlertCircle className="h-5 w-5 text-orange-400 shrink-0 mt-0.5" />
-                    <p className="text-sm text-orange-300">
-                      No payment methods are available. Please contact the administrator.
+            </div>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {isAddingCard ? (
+              <div className="border border-gray-800 rounded-lg p-4 space-y-4">
+                <h3 className="text-sm font-medium mb-4">Add Payment Method</h3>
+                
+                <RadioGroup defaultValue="card" className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="card" id="payment-card" />
+                    <Label htmlFor="payment-card" className="flex items-center">
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      Credit/Debit Card
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="paypal" id="payment-paypal" />
+                    <Label htmlFor="payment-paypal">PayPal</Label>
+                  </div>
+                </RadioGroup>
+                
+                <div className="grid gap-4 pt-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="cardNumber">Card Number</Label>
+                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="expMonth">Expiration Month</Label>
+                      <Select>
+                        <SelectTrigger id="expMonth">
+                          <SelectValue placeholder="Month" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                            <SelectItem key={month} value={month.toString()}>
+                              {month.toString().padStart(2, '0')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="expYear">Expiration Year</Label>
+                      <Select>
+                        <SelectTrigger id="expYear">
+                          <SelectValue placeholder="Year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(year => (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="cvc">CVC</Label>
+                      <Input id="cvc" placeholder="123" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end space-x-2 pt-2">
+                  <Button onClick={handleAddCard}>
+                    Add Card
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {paymentMethods.length === 0 ? (
+                  <div className="text-center py-10">
+                    <CreditCard className="h-12 w-12 mx-auto text-gray-500 mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No payment methods</h3>
+                    <p className="text-gray-400 mb-6">
+                      You haven't added any payment methods yet.
                     </p>
+                    <Button onClick={() => setIsAddingCard(true)}>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Payment Method
+                    </Button>
                   </div>
                 ) : (
-                  <>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Payment Type</label>
-                      <div className="flex gap-2">
-                        {availablePaymentOptions.includes('stripe') && (
-                          <Button
-                            type="button"
-                            variant={newPaymentMethod.type === 'card' ? 'default' : 'outline'}
-                            onClick={() => setNewPaymentMethod({...newPaymentMethod, type: 'card'})}
-                            className="flex-1"
-                          >
-                            Credit Card
-                          </Button>
-                        )}
-                        {availablePaymentOptions.includes('paypal') && (
-                          <Button
-                            type="button"
-                            variant={newPaymentMethod.type === 'paypal' ? 'default' : 'outline'}
-                            onClick={() => setNewPaymentMethod({...newPaymentMethod, type: 'paypal'})}
-                            className="flex-1"
-                          >
-                            PayPal
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {newPaymentMethod.type === 'card' && (
-                      <>
-                        <div className="space-y-2">
-                          <label htmlFor="name_on_card" className="text-sm font-medium">Name on Card</label>
-                          <Input
-                            id="name_on_card"
-                            value={newPaymentMethod.name_on_card}
-                            onChange={(e) => setNewPaymentMethod({...newPaymentMethod, name_on_card: e.target.value})}
-                            className="bg-gray-800 border-gray-700"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <label htmlFor="card_number" className="text-sm font-medium">Card Number</label>
-                          <Input
-                            id="card_number"
-                            value={newPaymentMethod.card_number}
-                            onChange={(e) => setNewPaymentMethod({...newPaymentMethod, card_number: e.target.value})}
-                            placeholder="•••• •••• •••• ••••"
-                            className="bg-gray-800 border-gray-700"
-                          />
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <label htmlFor="expiry_date" className="text-sm font-medium">Expiry Date</label>
-                            <Input
-                              id="expiry_date"
-                              value={newPaymentMethod.expiry_date}
-                              onChange={(e) => setNewPaymentMethod({...newPaymentMethod, expiry_date: e.target.value})}
-                              placeholder="MM/YY"
-                              className="bg-gray-800 border-gray-700"
-                            />
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <label htmlFor="cvv" className="text-sm font-medium">CVV</label>
-                            <Input
-                              id="cvv"
-                              value={newPaymentMethod.cvv}
-                              onChange={(e) => setNewPaymentMethod({...newPaymentMethod, cvv: e.target.value})}
-                              placeholder="•••"
-                              className="bg-gray-800 border-gray-700"
-                            />
+                  <RadioGroup 
+                    value={selectedPaymentMethod} 
+                    onValueChange={setSelectedPaymentMethod}
+                    className="space-y-4"
+                  >
+                    {paymentMethods.map(method => (
+                      <div key={method.id} className="flex items-start space-x-3">
+                        <RadioGroupItem value={method.id} id={method.id} className="mt-1" />
+                        <div className="flex-1 border border-gray-800 rounded-lg p-4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <Label htmlFor={method.id} className="text-sm font-medium flex items-center">
+                                {method.type === 'card' ? (
+                                  getBrandLogo(method.details.brand)
+                                ) : (
+                                  '📧 PayPal'
+                                )}
+                                {method.isDefault && (
+                                  <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                                    Default
+                                  </span>
+                                )}
+                              </Label>
+                              {method.type === 'card' ? (
+                                <div className="text-sm text-gray-400 mt-1">
+                                  •••• •••• •••• {method.details.last4}
+                                  <div className="mt-1">
+                                    Expires {method.details.expMonth?.toString().padStart(2, '0')}/{method.details.expYear}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="text-sm text-gray-400 mt-1">
+                                  {method.details.email}
+                                </div>
+                              )}
+                            </div>
+                            
+                            <div className="flex space-x-2">
+                              {!method.isDefault && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleSetDefaultPayment(method.id)}
+                                  className="h-8 px-2 text-xs"
+                                >
+                                  <Check className="h-3.5 w-3.5 mr-1" />
+                                  Set Default
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemovePayment(method.id)}
+                                className="h-8 px-2 text-xs text-red-500 hover:text-red-400 hover:bg-red-950/20"
+                              >
+                                <Trash2 className="h-3.5 w-3.5 mr-1" />
+                                Remove
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </>
-                    )}
-                    
-                    {newPaymentMethod.type === 'paypal' && (
-                      <div className="space-y-2">
-                        <label htmlFor="paypal_email" className="text-sm font-medium">PayPal Email</label>
-                        <Input
-                          id="paypal_email"
-                          type="email"
-                          value={newPaymentMethod.paypal_email}
-                          onChange={(e) => setNewPaymentMethod({...newPaymentMethod, paypal_email: e.target.value})}
-                          className="bg-gray-800 border-gray-700"
-                        />
                       </div>
-                    )}
-                    
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={newPaymentMethod.is_default}
-                        onChange={(e) => setNewPaymentMethod({...newPaymentMethod, is_default: e.target.checked})}
-                        className="rounded border-gray-600 bg-gray-800 text-primary"
-                      />
-                      <span className="text-sm">Set as default payment method</span>
-                    </label>
-                    
-                    <div className="pt-4 flex justify-end">
-                      <Button onClick={handleAddPaymentMethod}>Add Payment Method</Button>
-                    </div>
-                  </>
+                    ))}
+                  </RadioGroup>
                 )}
-              </div>
-            </DialogContent>
-          </Dialog>
-        </CardHeader>
-        <CardContent>
-          {paymentMethods.length === 0 ? (
-            <div className="text-center py-6">
-              <p className="text-gray-400">No payment methods added yet.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {paymentMethods.map((method) => (
-                <div 
-                  key={method.id}
-                  className={`flex items-center justify-between p-3 rounded-md border ${
-                    method.is_default ? 'border-primary/50 bg-primary/5' : 'border-gray-800 bg-gray-800/50'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {method.type === 'card' ? (
-                      <div className="h-10 w-16 bg-gray-700 rounded flex items-center justify-center text-xs">
-                        {method.card_type}
-                      </div>
-                    ) : (
-                      <div className="h-10 w-16 bg-blue-900/30 text-blue-400 rounded flex items-center justify-center text-xs">
-                        PayPal
-                      </div>
-                    )}
-                    
-                    <div>
-                      {method.type === 'card' ? (
-                        <>
-                          <p className="text-sm font-medium">•••• •••• •••• {method.last_four}</p>
-                          <p className="text-xs text-gray-400">Expires {method.expiry_date}</p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="text-sm font-medium">PayPal</p>
-                          <p className="text-xs text-gray-400">{method.paypal_email}</p>
-                        </>
-                      )}
-                    </div>
-                    
-                    {method.is_default && (
-                      <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full ml-2">
-                        Default
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    {!method.is_default && (
-                      <Button 
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleMakeDefaultPayment(method.id)}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Check className="h-4 w-4" />
-                        <span className="sr-only">Make Default</span>
-                      </Button>
-                    )}
-                    <Button 
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit className="h-4 w-4" />
-                      <span className="sr-only">Edit</span>
-                    </Button>
-                    <Button 
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeletePaymentMethod(method.id)}
-                      className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Delete</span>
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </FadeIn>
       
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Billing Addresses</CardTitle>
-          <Dialog open={addressFormOpen} onOpenChange={setAddressFormOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
-                <PlusCircle className="h-4 w-4" />
-                Add Address
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-800 text-white">
-              <DialogHeader>
-                <DialogTitle>Add Billing Address</DialogTitle>
-              </DialogHeader>
-              
-              <div className="mt-4 space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="street" className="text-sm font-medium">Street Address</label>
-                  <Input
-                    id="street"
-                    value={newAddress.street}
-                    onChange={(e) => setNewAddress({...newAddress, street: e.target.value})}
-                    className="bg-gray-800 border-gray-700"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="city" className="text-sm font-medium">City</label>
-                    <Input
-                      id="city"
-                      value={newAddress.city}
-                      onChange={(e) => setNewAddress({...newAddress, city: e.target.value})}
-                      className="bg-gray-800 border-gray-700"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label htmlFor="state" className="text-sm font-medium">State</label>
-                    <Input
-                      id="state"
-                      value={newAddress.state}
-                      onChange={(e) => setNewAddress({...newAddress, state: e.target.value})}
-                      className="bg-gray-800 border-gray-700"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="zip" className="text-sm font-medium">ZIP Code</label>
-                    <Input
-                      id="zip"
-                      value={newAddress.zip}
-                      onChange={(e) => setNewAddress({...newAddress, zip: e.target.value})}
-                      className="bg-gray-800 border-gray-700"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label htmlFor="country" className="text-sm font-medium">Country</label>
-                    <select
-                      id="country"
-                      value={newAddress.country}
-                      onChange={(e) => setNewAddress({...newAddress, country: e.target.value})}
-                      className="w-full h-10 rounded-md bg-gray-800 border border-gray-700 px-3 py-2"
-                    >
-                      <option value="US">United States</option>
-                      <option value="CA">Canada</option>
-                      <option value="UK">United Kingdom</option>
-                      <option value="AU">Australia</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={newAddress.is_default}
-                    onChange={(e) => setNewAddress({...newAddress, is_default: e.target.checked})}
-                    className="rounded border-gray-600 bg-gray-800 text-primary"
-                  />
-                  <span className="text-sm">Set as default billing address</span>
-                </label>
-                
-                <div className="pt-4 flex justify-end">
-                  <Button onClick={handleAddAddress}>Add Address</Button>
-                </div>
+      <FadeIn delay={200}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center">
+                  <MapPin className="mr-2 h-5 w-5 text-primary" />
+                  Addresses
+                </CardTitle>
+                <CardDescription>
+                  Manage your billing and shipping addresses
+                </CardDescription>
               </div>
-            </DialogContent>
-          </Dialog>
-        </CardHeader>
-        <CardContent>
-          {billingAddresses.length === 0 ? (
-            <div className="text-center py-6">
-              <p className="text-gray-400">No billing addresses added yet.</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIsAddingAddress(!isAddingAddress)}
+              >
+                {isAddingAddress ? "Cancel" : "Add Address"}
+              </Button>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {billingAddresses.map((address) => (
-                <div 
-                  key={address.id}
-                  className={`p-3 rounded-md border ${
-                    address.is_default ? 'border-primary/50 bg-primary/5' : 'border-gray-800 bg-gray-800/50'
-                  }`}
-                >
-                  <div className="flex justify-between">
-                    <div>
-                      <p className="text-sm">
-                        {address.street}, {address.city}, {address.state} {address.zip}
-                      </p>
-                      <p className="text-xs text-gray-400">{address.country}</p>
-                      
-                      {address.is_default && (
-                        <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full mt-1 inline-block">
-                          Default
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-start gap-1">
-                      {!address.is_default && (
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleMakeDefaultAddress(address.id)}
-                          className="h-8 w-8 p-0"
-                        >
-                          <Check className="h-4 w-4" />
-                          <span className="sr-only">Make Default</span>
-                        </Button>
-                      )}
-                      <Button 
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
-                      </Button>
-                      <Button 
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteAddress(address.id)}
-                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
-                    </div>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {isAddingAddress || isEditingAddress ? (
+              <AddressForm 
+                onCancel={() => {
+                  setIsAddingAddress(false);
+                  setIsEditingAddress(null);
+                }} 
+                editingAddress={isEditingAddress ? addresses.find(a => a.id === isEditingAddress) : undefined}
+              />
+            ) : (
+              <>
+                {addresses.length === 0 ? (
+                  <div className="text-center py-10">
+                    <MapPin className="h-12 w-12 mx-auto text-gray-500 mb-4" />
+                    <h3 className="text-lg font-medium mb-2">No addresses</h3>
+                    <p className="text-gray-400 mb-6">
+                      You haven't added any addresses yet.
+                    </p>
+                    <Button onClick={() => setIsAddingAddress(true)}>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Add Address
+                    </Button>
                   </div>
-                </div>
-              ))}
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {addresses.map(address => (
+                      <div key={address.id} className="border border-gray-800 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center">
+                            <h3 className="text-sm font-medium">{address.name}</h3>
+                            {address.isDefault && (
+                              <span className="ml-2 text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                                Default
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex space-x-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setIsEditingAddress(address.id)}
+                              className="h-7 w-7 p-0"
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveAddress(address.id)}
+                              className="h-7 w-7 p-0 text-red-500 hover:text-red-400 hover:bg-red-950/20"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <address className="text-sm not-italic text-gray-400 space-y-1">
+                          <p>{address.street}</p>
+                          <p>{address.city}, {address.state} {address.zip}</p>
+                          <p>{address.country}</p>
+                        </address>
+                        
+                        {!address.isDefault && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleSetDefaultAddress(address.id)}
+                            className="mt-3 h-8 text-xs"
+                          >
+                            <Check className="h-3.5 w-3.5 mr-1" />
+                            Set as Default
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </FadeIn>
+      
+      <FadeIn delay={300}>
+        <Card className="bg-black/30 border-gray-800">
+          <CardHeader>
+            <CardTitle>Billing History</CardTitle>
+            <CardDescription>View your past invoices and payments</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8">
+              <p className="text-gray-400 mb-2">No billing history available</p>
+              <p className="text-sm text-gray-500">Your past orders and payments will appear here</p>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+          <CardFooter className="justify-between">
+            <Button variant="outline" size="sm">
+              Download Invoices
+            </Button>
+            <Button size="sm">View All Transactions</Button>
+          </CardFooter>
+        </Card>
+      </FadeIn>
     </div>
+  );
+};
+
+interface AddressFormProps {
+  onCancel: () => void;
+  editingAddress?: Address;
+}
+
+const AddressForm = ({ onCancel, editingAddress }: AddressFormProps) => {
+  const [formData, setFormData] = useState({
+    name: editingAddress?.name || '',
+    street: editingAddress?.street || '',
+    city: editingAddress?.city || '',
+    state: editingAddress?.state || '',
+    zip: editingAddress?.zip || '',
+    country: editingAddress?.country || 'United States',
+  });
+  
+  const { toast } = useToast();
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real app, this would save to the database
+    toast({
+      title: editingAddress ? "Address updated" : "Address added",
+      description: `Your address has been ${editingAddress ? 'updated' : 'added'} successfully`
+    });
+    
+    onCancel();
+  };
+  
+  return (
+    <form onSubmit={handleSubmit} className="border border-gray-800 rounded-lg p-4 space-y-4">
+      <h3 className="text-sm font-medium mb-4">
+        {editingAddress ? 'Edit Address' : 'Add New Address'}
+      </h3>
+      
+      <div className="space-y-2">
+        <Label htmlFor="name">Full Name</Label>
+        <Input 
+          id="name" 
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="street">Street Address</Label>
+        <Input 
+          id="street" 
+          name="street"
+          value={formData.street}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="city">City</Label>
+          <Input 
+            id="city" 
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="state">State/Province</Label>
+          <Input 
+            id="state" 
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            required
+          />
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="zip">ZIP/Postal Code</Label>
+          <Input 
+            id="zip" 
+            name="zip"
+            value={formData.zip}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="country">Country</Label>
+          <Select
+            value={formData.country}
+            onValueChange={(value) => setFormData({ ...formData, country: value })}
+          >
+            <SelectTrigger id="country">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="United States">United States</SelectItem>
+              <SelectItem value="Canada">Canada</SelectItem>
+              <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+              <SelectItem value="Australia">Australia</SelectItem>
+              <SelectItem value="France">France</SelectItem>
+              <SelectItem value="Germany">Germany</SelectItem>
+              <SelectItem value="Japan">Japan</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
+      <div className="flex justify-end space-x-2 pt-2">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit">
+          {editingAddress ? 'Update Address' : 'Add Address'}
+        </Button>
+      </div>
+    </form>
   );
 };
 
