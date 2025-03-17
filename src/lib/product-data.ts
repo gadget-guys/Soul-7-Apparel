@@ -1,8 +1,8 @@
-
 export interface ProductVariant {
   id: string;
   color: string;
   colorCode: string;
+  images: string[];
   sizes: SizeOption[];
 }
 

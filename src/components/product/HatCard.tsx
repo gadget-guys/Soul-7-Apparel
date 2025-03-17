@@ -128,11 +128,6 @@ const HatCard = ({ product, index = 0 }: HatCardProps) => {
                 Sale
               </div>
             )}
-            {product.style && (
-              <div className="bg-blue-700 text-white text-xs font-medium px-2 py-1 rounded">
-                {product.style}
-              </div>
-            )}
           </div>
         </div>
         
