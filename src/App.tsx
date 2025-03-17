@@ -22,6 +22,8 @@ import UserBilling from './pages/account/UserBilling';
 import UserWishlist from './pages/account/UserWishlist';
 import AdminPortal from './pages/account/AdminPortal';
 import MiniCart from './components/cart/MiniCart';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
         <Route path="/account" element={<AccountPage />} />

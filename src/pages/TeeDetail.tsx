@@ -6,6 +6,7 @@ import ProductImage from '@/components/product/ProductImage';
 import ProductInfo from '@/components/ProductInfo';
 import ReviewSection from '@/components/review/ReviewSection';
 import RelatedProducts from '@/components/product/RelatedProducts';
+import UserGeneratedContent from '@/components/social/UserGeneratedContent';
 import { FadeIn } from '@/components/ui/transitions';
 import { teesProducts } from '@/lib/tees-data';
 import { relatedProducts } from '@/lib/product-data';
@@ -178,6 +179,20 @@ const TeeDetail = () => {
                 </div>
               </div>
             </FadeIn>
+          </div>
+        </section>
+        
+        {/* Divider */}
+        <FadeIn>
+          <div className="container mx-auto px-4 sm:px-6 py-4">
+            <div className="h-px bg-gray-800"></div>
+          </div>
+        </FadeIn>
+        
+        {/* User Generated Content */}
+        <section>
+          <div className="container mx-auto px-4 sm:px-6">
+            <UserGeneratedContent productName={product.name} productId={product.id} />
           </div>
         </section>
         

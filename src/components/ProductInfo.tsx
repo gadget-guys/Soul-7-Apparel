@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import ProductTabs from '@/components/product/ProductTabs';
 import QuantitySelector from '@/components/product/QuantitySelector';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import ShippingInfo from '@/components/product/ShippingInfo';
+import SocialShare from '@/components/social/SocialShare';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -201,6 +203,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         
         <FadeIn delay={800}>
           <ShippingInfo />
+        </FadeIn>
+        
+        <FadeIn delay={850}>
+          <div className="pt-2">
+            <p className="text-sm text-gray-400 mb-2">Share this product</p>
+            <SocialShare title={product.name} />
+          </div>
         </FadeIn>
       </div>
     </div>
