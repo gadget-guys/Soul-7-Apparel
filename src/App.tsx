@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Index from './pages/Index';
@@ -24,6 +23,7 @@ import AdminPortal from './pages/account/AdminPortal';
 import MiniCart from './components/cart/MiniCart';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import WordPressTest from './pages/WordPressTest';
 
 function App() {
   return (
@@ -41,6 +41,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/wordpress-test" element={<WordPressTest />} />
         
         {/* Auth routes */}
         <Route path="/auth/login" element={<Login />} />

@@ -34,6 +34,8 @@ const NotFound = () => {
       return { text: "Visit your account page", link: "/account" };
     } else if (path.includes("blog") || path.includes("article")) {
       return { text: "Read our latest blog posts", link: "/blog" };
+    } else if (path.includes("wordpress") || path.includes("wp")) {
+      return { text: "Test WordPress connectivity", link: "/wordpress-test" };
     }
     
     return { text: "Browse all products", link: "/shop" };
@@ -63,6 +65,10 @@ const NotFound = () => {
                 
                 <Button asChild variant="outline" className="w-full">
                   <Link to={suggestion.link}>{suggestion.text}</Link>
+                </Button>
+
+                <Button asChild variant="ghost" className="w-full">
+                  <Link to="/wordpress-test">Test WordPress Integration</Link>
                 </Button>
               </div>
             </div>
