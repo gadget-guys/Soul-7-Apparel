@@ -1,4 +1,3 @@
-
 export interface ProductVariant {
   id: string;
   color: string;
@@ -37,6 +36,12 @@ export interface Product {
   features: string[];
   details: { [key: string]: string };
   reviews: Review[];
+  // Add these properties as optional to maintain compatibility with all product types
+  new?: boolean;
+  isExclusive?: boolean;
+  soldOut?: boolean;
+  material?: string;
+  isSustainable?: boolean;
 }
 
 export const featuredProduct: Product = {
