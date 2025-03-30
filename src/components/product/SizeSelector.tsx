@@ -24,7 +24,7 @@ const SizeSelector = ({
         )}
       </div>
       
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
         {sizes.map((sizeOption) => (
           <SizeButton
             key={sizeOption.id}

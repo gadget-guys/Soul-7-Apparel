@@ -47,6 +47,10 @@ const TeeCard = ({ product, index = 0 }: TeeCardProps) => {
     ? product.images[0] 
     : 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';
 
+  // Calculate how many sizes are available
+  const totalSizes = product.variants[0]?.sizes.length || 0;
+  const availableSizes = product.variants[0]?.sizes.filter(size => size.inStock).length || 0;
+
   return (
     <div
       className="group animate-fade-in"
@@ -143,6 +147,10 @@ const TeeCard = ({ product, index = 0 }: TeeCardProps) => {
             discountPrice={product.discountPrice} 
             currency={product.currency} 
           />
+
+          <div className="text-xs text-gray-400 mt-1">
+            {availableSizes} of {totalSizes} sizes available
+          </div>
         </div>
       </Link>
     </div>

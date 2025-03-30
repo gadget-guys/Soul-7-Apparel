@@ -62,8 +62,17 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   return (
     <div className="space-y-6">
       <FadeIn>
-        <div className="inline-block bg-secondary/50 px-2.5 py-1 rounded-full text-xs font-medium text-primary">
-          New Arrival
+        <div className="flex flex-wrap gap-2">
+          {product.new && (
+            <div className="inline-block bg-secondary/50 px-2.5 py-1 rounded-full text-xs font-medium text-primary">
+              New Arrival
+            </div>
+          )}
+          {product.isExclusive && (
+            <div className="inline-block bg-primary/30 px-2.5 py-1 rounded-full text-xs font-medium text-primary">
+              Exclusive
+            </div>
+          )}
         </div>
       </FadeIn>
       
