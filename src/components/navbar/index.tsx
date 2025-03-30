@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ShoppingCart, Menu, X, Search, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MobileMenu from './MobileMenu';
@@ -14,6 +14,13 @@ interface NavbarProps {
 const Navbar = ({ transparent = false }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Check if current page is a product detail page
+  const isProductPage = 
+    location.pathname.includes('/tee/') || 
+    location.pathname.includes('/hat/') || 
+    location.pathname.includes('/hoodie/');
   
   useEffect(() => {
     const handleScroll = () => {
@@ -41,13 +48,15 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
         <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Back Button (only shows on product pages) */}
           <div className="flex items-center">
-            <Link 
-              to="/" 
-              className="mr-4 text-white hover:text-gray-300 transition-colors"
-              aria-label="Go back"
-            >
-              <ChevronLeft size={20} />
-            </Link>
+            {isProductPage && (
+              <Link 
+                to="/" 
+                className="mr-4 text-white hover:text-gray-300 transition-colors"
+                aria-label="Go back"
+              >
+                <ChevronLeft size={20} />
+              </Link>
+            )}
             
             {/* Logo */}
             <Link to="/" className="text-xl font-medium tracking-tight text-white">
@@ -78,7 +87,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             </button>
 
             {/* Account Button */}
-            <Link to="/account/login">
+            <Link to="/auth/login">
               <Button 
                 variant="ghost" 
                 className="text-white hover:text-gray-300 transition-colors p-0"
@@ -107,4 +116,3 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
 };
 
 export default Navbar;
-

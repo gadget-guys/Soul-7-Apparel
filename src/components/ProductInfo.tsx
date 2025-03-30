@@ -1,8 +1,7 @@
-
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FadeIn, SlideIn, ScaleIn } from '@/components/ui/transitions';
+import { FadeIn, SlideIn } from '@/components/ui/transitions';
 import ColorSelector from '@/components/ColorSelector';
 import SizeSelector from '@/components/product/SizeSelector';
 import ProductTabs from '@/components/product/ProductTabs';
@@ -10,6 +9,7 @@ import QuantitySelector from '@/components/product/QuantitySelector';
 import AddToCartButton from '@/components/product/AddToCartButton';
 import ShippingInfo from '@/components/product/ShippingInfo';
 import SocialShare from '@/components/social/SocialShare';
+import ProductPricing from '@/components/product/ProductPricing';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -52,22 +52,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       description: `${product.name} has been ${isFavorite ? "removed from" : "added to"} your wishlist.`,
     });
   };
-  
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: product.currency,
-  }).format(product.price);
-  
-  const formattedDiscountPrice = product.discountPrice 
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: product.currency,
-      }).format(product.discountPrice)
-    : null;
-    
-  const discountPercentage = product.discountPrice 
-    ? Math.round(100 - (product.discountPrice / product.price) * 100)
-    : null;
 
   const variantImage = selectedVariant?.images?.[0] || product.images[0];
   
@@ -112,21 +96,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           </div>
         </FadeIn>
         
-        <ScaleIn delay={300}>
-          <div className="flex items-baseline space-x-3 mt-1">
-            {formattedDiscountPrice ? (
-              <>
-                <span className="text-2xl font-semibold text-white">{formattedDiscountPrice}</span>
-                <span className="text-lg text-gray-500 line-through">{formattedPrice}</span>
-                <span className="inline-block bg-red-900 text-red-300 px-2 py-0.5 rounded text-xs font-medium">
-                  Save {discountPercentage}%
-                </span>
-              </>
-            ) : (
-              <span className="text-2xl font-semibold text-white">{formattedPrice}</span>
-            )}
-          </div>
-        </ScaleIn>
+        <ProductPricing product={product} />
       </div>
       
       <div className="space-y-6 pt-2">

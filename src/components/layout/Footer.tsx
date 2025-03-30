@@ -17,24 +17,24 @@ const Footer = () => {
           </div>
           
           <FooterColumn title="Shop">
-            <FooterLink href="#" label="Headphones" />
-            <FooterLink href="#" label="Speakers" />
-            <FooterLink href="#" label="Earbuds" />
-            <FooterLink href="#" label="Accessories" />
+            <FooterLink href="/mens/tees" label="T-Shirts" />
+            <FooterLink href="/mens/hats" label="Hats" />
+            <FooterLink href="/mens/hoodies" label="Hoodies" />
+            <FooterLink href="/shop" label="All Products" />
           </FooterColumn>
           
           <FooterColumn title="Support">
-            <FooterLink href="#" label="Contact Us" />
+            <FooterLink href="/blog" label="Help Center" />
             <FooterLink href="#" label="FAQ" />
             <FooterLink href="#" label="Shipping" />
             <FooterLink href="#" label="Returns" />
           </FooterColumn>
           
           <FooterColumn title="Company">
-            <FooterLink href="#" label="About Us" />
+            <FooterLink href="/blog" label="About Us" />
             <FooterLink href="#" label="Sustainability" />
             <FooterLink href="#" label="Press" />
-            <FooterLink href="#" label="Careers" />
+            <FooterLink href="/wordpress-test" label="WordPress" />
           </FooterColumn>
         </div>
       </div>
@@ -70,4 +70,3 @@ const FooterLink = ({ href, label }: FooterLinkProps) => (
 );
 
 export default Footer;
-
