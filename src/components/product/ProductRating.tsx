@@ -10,19 +10,21 @@ interface ProductRatingProps {
 
 const ProductRating = ({ rating, reviewCount, size = 14 }: ProductRatingProps) => {
   return (
-    <div className="flex text-yellow-400">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star 
-          key={i} 
-          size={size} 
-          className={cn(
-            i >= Math.round(rating) && "text-gray-600"
-          )} 
-          fill="currentColor" 
-        />
-      ))}
-      <span className="ml-1 text-xs text-gray-400">
-        ({reviewCount})
+    <div className="flex items-center">
+      <div className="flex text-yellow-400">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star 
+            key={i} 
+            size={size} 
+            className={cn(
+              i < Math.floor(rating) ? "text-yellow-400" : "text-gray-600",
+              "fill-current"
+            )}
+          />
+        ))}
+      </div>
+      <span className="ml-2 text-sm text-gray-400">
+        {rating} ({reviewCount} reviews)
       </span>
     </div>
   );

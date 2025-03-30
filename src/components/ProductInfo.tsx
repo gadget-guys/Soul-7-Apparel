@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FadeIn, SlideIn } from '@/components/ui/transitions';
+import { FadeIn, SlideIn, ScaleIn } from '@/components/ui/transitions';
 import ColorSelector from '@/components/ColorSelector';
 import SizeSelector from '@/components/product/SizeSelector';
 import ProductTabs from '@/components/product/ProductTabs';
@@ -10,6 +11,7 @@ import AddToCartButton from '@/components/product/AddToCartButton';
 import ShippingInfo from '@/components/product/ShippingInfo';
 import SocialShare from '@/components/social/SocialShare';
 import ProductPricing from '@/components/product/ProductPricing';
+import ProductRating from '@/components/product/ProductRating';
 import { Product, ProductVariant, SizeOption } from '@/lib/product-data';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -73,27 +75,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </SlideIn>
         
         <FadeIn delay={200}>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <svg
-                  key={i}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill={i < Math.round(product.rating) ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  className={i < Math.round(product.rating) ? "text-yellow-400" : "text-gray-600"}
-                  width="16"
-                  height="16"
-                >
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                </svg>
-              ))}
-              <span className="ml-2 text-sm text-gray-400">
-                {product.rating} ({product.reviewCount} reviews)
-              </span>
-            </div>
-          </div>
+          <ProductRating 
+            rating={product.rating} 
+            reviewCount={product.reviewCount} 
+            size={16}
+          />
         </FadeIn>
         
         <ProductPricing product={product} />
