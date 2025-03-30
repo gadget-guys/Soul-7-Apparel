@@ -51,7 +51,7 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
             
             {/* Logo */}
             <Link to="/" className="text-xl font-medium tracking-tight text-white">
-              AUDIOPHILE
+              SOUL 7 APPAREL
             </Link>
           </div>
           
@@ -107,3 +107,4 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
 };
 
 export default Navbar;
+

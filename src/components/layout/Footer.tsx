@@ -7,12 +7,12 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-medium mb-4 text-white font-playfair">AUDIOPHILE</h3>
+            <h3 className="font-medium mb-4 text-white font-playfair">SOUL 7 APPAREL</h3>
             <p className="text-sm text-gray-400 mb-4">
-              Premium audio products for the discerning listener. Experience sound as it was meant to be heard.
+              Premium clothing for the discerning individual. Experience style as it was meant to be worn.
             </p>
             <div className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} Audiophile. All rights reserved.
+              &copy; {new Date().getFullYear()} Soul 7 Apparel. All rights reserved.
             </div>
           </div>
           
@@ -70,3 +70,4 @@ const FooterLink = ({ href, label }: FooterLinkProps) => (
 );
 
 export default Footer;
+

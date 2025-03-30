@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to Soul 7 Apparel
 
 ## Project info
 
@@ -6,7 +6,7 @@
 
 ## How can I edit this code?
 
-There are several ways of editing your application.
+There are several ways of editing your Soul 7 Apparel application.
 
 **Use Lovable**
 
