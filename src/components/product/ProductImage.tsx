@@ -30,10 +30,23 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
       const imagePromises = images.map((src, index) => {
         return new Promise<void>((resolve) => {
           const img = new Image();
-          // Remove 'public/' prefix if it exists as it causes loading issues
-          const cleanedSrc = src.startsWith('public/') ? src.substring(7) : src;
+          
+          // Process the src path correctly
+          let cleanedSrc = src;
+          
+          // If path starts with 'public/', remove it
+          if (src.startsWith('public/')) {
+            cleanedSrc = src.substring(7);
+          }
+          
+          // Add a leading slash if it's a relative path to the public folder
+          if (cleanedSrc.startsWith('lovable-uploads/')) {
+            cleanedSrc = '/' + cleanedSrc;
+          }
+          
           console.log(`Loading image ${index}: ${cleanedSrc}`);
           img.src = cleanedSrc;
+          
           img.onload = () => {
             console.log(`Image ${index} loaded successfully`);
             setImagesLoaded(prev => {
@@ -82,10 +95,22 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
     setIsZoomed(!isZoomed);
   };
 
-  // Process image paths to remove 'public/' prefix
-  const processedImages = images.map(img => 
-    img.startsWith('public/') ? img.substring(7) : img
-  );
+  // Process image paths properly
+  const processedImages = images.map(img => {
+    let processedImg = img;
+    
+    // Remove 'public/' prefix if it exists
+    if (processedImg.startsWith('public/')) {
+      processedImg = processedImg.substring(7);
+    }
+    
+    // Add leading slash for local images
+    if (processedImg.startsWith('lovable-uploads/')) {
+      processedImg = '/' + processedImg;
+    }
+    
+    return processedImg;
+  });
 
   return (
     <div className="relative lg:sticky lg:top-20 select-none">
