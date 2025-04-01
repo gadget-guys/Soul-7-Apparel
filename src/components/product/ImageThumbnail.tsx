@@ -16,6 +16,9 @@ const ImageThumbnail = ({
   isLoaded,
   onClick 
 }: ImageThumbnailProps) => {
+  // Process image path to ensure proper display
+  const cleanedImage = image.startsWith('public/') ? image.substring(7) : image;
+  
   return (
     <button 
       onClick={onClick}
@@ -28,7 +31,7 @@ const ImageThumbnail = ({
       aria-label={`View image ${index + 1}`}
     >
       <img 
-        src={image} 
+        src={cleanedImage} 
         alt={`Thumbnail ${index + 1}`} 
         className={cn(
           "w-full h-full object-cover transition-opacity duration-500",

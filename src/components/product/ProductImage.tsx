@@ -17,6 +17,11 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const imageRef = useRef<HTMLDivElement>(null);
 
+  // Log images for debugging
+  useEffect(() => {
+    console.log("ProductImage received images:", images);
+  }, [images]);
+
   useEffect(() => {
     const loadImages = async () => {
       const loadStatuses = images.map(() => false);
@@ -25,8 +30,12 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
       const imagePromises = images.map((src, index) => {
         return new Promise<void>((resolve) => {
           const img = new Image();
-          img.src = src;
+          // Remove 'public/' prefix if it exists as it causes loading issues
+          const cleanedSrc = src.startsWith('public/') ? src.substring(7) : src;
+          console.log(`Loading image ${index}: ${cleanedSrc}`);
+          img.src = cleanedSrc;
           img.onload = () => {
+            console.log(`Image ${index} loaded successfully`);
             setImagesLoaded(prev => {
               const newState = [...prev];
               newState[index] = true;
@@ -34,7 +43,8 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
             });
             resolve();
           };
-          img.onerror = () => {
+          img.onerror = (error) => {
+            console.error(`Error loading image ${index}:`, cleanedSrc, error);
             resolve();
           };
         });
@@ -72,6 +82,11 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
     setIsZoomed(!isZoomed);
   };
 
+  // Process image paths to remove 'public/' prefix
+  const processedImages = images.map(img => 
+    img.startsWith('public/') ? img.substring(7) : img
+  );
+
   return (
     <div className="relative lg:sticky lg:top-20 select-none">
       {/* Main Image */}
@@ -84,7 +99,7 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
         onClick={toggleZoom}
         onMouseMove={handleMouseMove}
       >
-        {images.map((image, index) => (
+        {processedImages.map((image, index) => (
           <div
             key={index}
             className={cn(
@@ -134,7 +149,7 @@ const ProductImage = ({ images, productName }: ProductImageProps) => {
       
       {/* Thumbnails */}
       <div className="mt-4 grid grid-cols-4 gap-2">
-        {images.map((image, index) => (
+        {processedImages.map((image, index) => (
           <FadeIn key={index} delay={100 + index * 50}>
             <ImageThumbnail 
               image={image}
