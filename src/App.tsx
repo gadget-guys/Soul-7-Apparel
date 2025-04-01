@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Index from './pages/Index';
@@ -26,6 +27,9 @@ import BlogPost from './pages/BlogPost';
 import WordPressTest from './pages/WordPressTest';
 
 function App() {
+  // Add console log to debug routing
+  console.log("App component rendering with routes");
+  
   return (
     <BrowserRouter>
       <Routes>

@@ -19,15 +19,21 @@ const HoodieDetail = () => {
   // Find the product - first look in the URL parameter, then default to the first product if not found
   const product = hoodiesProducts.find(p => p.id === id) || hoodiesProducts[0];
   
-  // Image gallery - combine all variant images
-  const allImages = [
+  // Image gallery - combine all variant images with product images to ensure we have images to display
+  const allImages = product ? [
     ...product.images,
-    // Add more images for different angles if needed
-    "https://images.unsplash.com/photo-1578681994506-b8f463449011?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
-  ];
+    ...product.variants.flatMap(variant => variant.images)
+  ].filter((img, index, self) => 
+    // Remove duplicates
+    index === self.findIndex(i => i === img)
+  ) : [];
   
   useEffect(() => {
+    // Log debugging information
+    console.log("Product ID from URL:", id);
+    console.log("Found product:", product);
+    console.log("All images:", allImages);
+    
     // Simulate loading state
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -80,7 +86,10 @@ const HoodieDetail = () => {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-2 gap-10 xl:gap-20">
               <ProductImage 
-                images={allImages} 
+                images={allImages.length > 0 ? allImages : [
+                  // Fallback image if no images are found
+                  "https://images.unsplash.com/photo-1578681994506-b8f463449011?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
+                ]} 
                 productName={product.name} 
               />
               
@@ -206,7 +215,6 @@ const HoodieDetail = () => {
         <RelatedProducts products={hoodiesProducts.filter(p => p.id !== product.id).slice(0, 4)} />
       </main>
       
-      {/* Footer */}
       <Footer />
     </div>
   );

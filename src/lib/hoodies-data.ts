@@ -10,6 +10,9 @@ export interface HoodieProduct extends Product {
   new?: boolean;
 }
 
+// Add debugging log to confirm data is loaded
+console.log("Loading hoodies-data.ts module");
+
 export const hoodiesProducts: HoodieProduct[] = [
   {
     id: "hoodie-001",
@@ -514,3 +517,6 @@ export const hoodiesProducts: HoodieProduct[] = [
     ]
   }
 ];
+
+// Add debugging log to confirm data is available
+console.log("Hoodies data available:", hoodiesProducts.length);
