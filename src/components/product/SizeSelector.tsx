@@ -24,7 +24,7 @@ const SizeSelector = ({
         )}
       </div>
       
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+      <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
         {sizes.map((sizeOption) => (
           <SizeButton
             key={sizeOption.id}
@@ -47,7 +47,7 @@ interface SizeButtonProps {
 const SizeButton = ({ sizeOption, isSelected, onSelect }: SizeButtonProps) => (
   <button
     className={cn(
-      "relative py-2 px-3 rounded border text-sm font-medium transition-all duration-200",
+      "relative py-2 px-1 sm:px-3 rounded border text-sm font-medium transition-all duration-200",
       isSelected 
         ? "border-primary bg-primary/10 text-primary" 
         : "border-gray-700 hover:border-gray-500",
